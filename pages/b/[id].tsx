@@ -46,7 +46,7 @@ export async function getStaticPaths() {
   const col = collection(store, "songs");
   const snap = await getDocs(col);
   const paths = snap.docs.map((doc) => {
-    const id = doc.id.toLowerCase().replace(/\s/, "+");
+    const id = doc.id.trim().toLowerCase().replace(/\s/g, "_");
     return { params: { id } };
   });
   return { paths, fallback: false };

@@ -38,7 +38,7 @@ export default function Buscar({ map }: Props) {
         <AnimatePresence>
           {map.map((id, n) => {
             console.log(id, n);
-            const href = "/b/" + id.replace(/\s/g, "+").toLowerCase();
+            const href = "/b/" + id.trim().toLowerCase().replace(/\s/g, "_");
             return (
               id.toLowerCase().includes(value.toLowerCase()) && (
                 <motion.li
