@@ -2,6 +2,7 @@ import * as outline from "@heroicons/react/outline";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import React, * as react from "react";
+import icons from "src/icons"
 
 type Props = {
   children: react.ReactNode;
@@ -12,9 +13,7 @@ export default function Layout({ children, className, center }: Props) {
   return (
     <>
       <NavBar />
-      <main className={`${className} ${center && "center"}`}>
-        {children}
-      </main>
+      <main className={`${className} ${center && "center"}`}>{children}</main>
     </>
   );
 
@@ -24,19 +23,19 @@ export default function Layout({ children, className, center }: Props) {
       <motion.nav>
         {/* <motion.button onClick={() => {
         }}></motion.button> */}
-        <NavLink href="#" Icon={outline.MenuIcon}>
+        <NavLink href="#" Icon={icons.Menu}>
           Menu
         </NavLink>
-        <NavLink href="/" Icon={outline.HomeIcon}>
+        <NavLink href="#" Icon={icons.Home}>
           Home
         </NavLink>
-        <NavLink href="/b/" Icon={outline.SearchIcon}>
+        <NavLink href="/b/" Icon={icons.Search}>
           Buscar
         </NavLink>
-        <NavLink href="/i/" Icon={outline.InformationCircleIcon}>
+        <NavLink href="/i/" Icon={icons.Info}>
           About
         </NavLink>
-        <NavLink href="/c/" Icon={outline.UserIcon}>
+        <NavLink href="/c/" Icon={icons.User}>
           Cuenta
         </NavLink>
       </motion.nav>
