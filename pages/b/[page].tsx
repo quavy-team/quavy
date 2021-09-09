@@ -24,7 +24,6 @@ interface Content {
 
 export default function Cancion({ name, data }: Props) {
   const { band, contents } = data;
-  // const
   return (
     <Layout>
       <h1>{title(name)}</h1>
@@ -45,33 +44,28 @@ export default function Cancion({ name, data }: Props) {
       </h2>
 
       {contents.map((content, key) => {
-        // content.text.split() 
-        // const R1 = /\|.+?\|/g;
-        // const R2 = /\(\(.+?\)\)/g;
-        // const A1 = content.text.match(R1);
-        // const A2 = content.text.match(R2);
-        // todo map |A| into <i>|A|</i>
-
-        // const map = A2?.map((para) => {
-        //   const [chord] = para.match(R1)!;
-        //   const array = para.split(chord)
-        //   console.log(array);
-        //   const string = array[0] + <i>{chord}</i> + array[1]
-        //   console.log(string);
-        // });
-
-        // const itals = A1?.map((ital, n) => <i key={n}> {ital} </i>);
-        // const paras = A2?.map((para, n) => <p key={n}>{para} </p>);
-        // console.log(A1, A2);
-        // console.log(paras, itals);
+        const { title, role, strum } = content;
+        const sentences = content.text.match(/\(\(.+?\)\)/g)!;
+        const text = sentences.map((sentence, n) => {
+          const text = sentence.replace(/\(|\)/g, "");
+          const [ital] = text.match(/\|.+?\|/g)!;
+          const [before, after] = text.split(ital);
+          return (
+            <p key={n}>
+              {before}
+              <i>{ital}</i>
+              {after}
+            </p>
+          );
+        });
 
         return (
           <section key={key}>
             <h3>
-              {content.title} & {content.role}
+              {title} & {role}
             </h3>
-            <div>{content.text}</div>
-            <h4>{content.strum}</h4>
+            <div>{text}</div>
+            <h4>{strum}</h4>
           </section>
         );
       })}
@@ -97,8 +91,6 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   const snap = await getDoc(document);
   const name = snap.id;
   const data = snap.data() ?? null;
-  // if (!data) return { redirect: "/404", props: {} };
-  // return { props: { name, data } };
   return data
     ? { props: { name, data } }
     : { props: { name, data }, redirect: "/404" };

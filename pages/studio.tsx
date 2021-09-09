@@ -18,9 +18,9 @@ export default function Studio() {
   const [title, setTitle] = useState("");
   const [band, setBand] = useState([""]);
   const [contents, setContents] = useState<ContentType[]>([]);
-  // const [onTipClick, setOnTipClick] = useState<any>();
-  // const tooltip = createRef<HTMLSpanElement>();
-  // const controls = useAnimation();
+
+  // entries().then(console.log);
+
   return (
     <Layout>
       <h1>Songly Studio !!</h1>
@@ -41,15 +41,6 @@ export default function Studio() {
           setBand(map);
         }}
       />
-      {/* <motion.span
-        className={styles.tooltip}
-        layout
-        animate={controls}
-        ref={tooltip}
-        onClick={onTipClick}
-      >
-        agregar
-      </motion.span> */}
       {contents.map((content, key) => {
         return <Block content={content} key={key} />;
 
@@ -67,7 +58,6 @@ export default function Studio() {
                 // array[key] = { title, role, strum, text };
                 // setContents(array)
                 contents[key] = { title, role, strum, text };
-
               }}
             >
               <input
@@ -99,20 +89,6 @@ export default function Studio() {
                   text && setText(text);
                 }}
                 onSelect={(e) => {
-                  // const sel = document.getSelection();
-                  // if (sel) {
-                  //   const rng = sel.getRangeAt(0);
-                  //   const string = rng.toString();
-                  //   const stuff = "((" + string + "))";
-                  //   const area = e.target as HTMLElement;
-                  //   const text = area.textContent!.replace(string, stuff);
-                  //   onkeydown = (e) => {
-                  //     if (e.key === "Enter") {
-                  //       e.preventDefault();
-                  //       area.textContent = text;
-                  //     }
-                  //   };
-                  // } else {
                   const area = e.target as HTMLTextAreaElement;
                   const { selectionStart, selectionEnd } = area;
                   const selection = area.value.slice(
@@ -128,22 +104,9 @@ export default function Studio() {
                     if (e.key === "Enter") {
                       e.preventDefault();
                       area.value = text;
-                      setText(text)
-                      // setText(text);
+                      setText(text);
                     }
                   };
-                  // }
-                  //   console.log(sel);
-                  //   const { x, y } = rng.getBoundingClientRect();
-                  //   const area = e.target as HTMLElement;
-                  //   console.log(tooltip.current);
-                  //   controls.start({ x, y: y - 50 });
-                  //   setOnTipClick(() => {
-                  //     area.textContent = area.textContent!.replace(
-                  //       string,
-                  //       stuff
-                  //     );
-                  //   });
                 }}
               />
             </form>
@@ -156,12 +119,60 @@ export default function Studio() {
           Crear Bloque
         </button>
         <button
-          onClick={() =>
-            setDoc(doc(store, "songs/" + title), { band, contents })
-          }
+          onClick={() => {
+            const songs = localStorage.getItem("songs");
+            const song = { title, data: { band, contents } };
+            const string = JSON.stringify(song);
+            // const object =
+            songs
+              ? (() => {
+                  const array = Array.from(songs);
+                  const boolean = array.includes(JSON.stringify(song));
+                  const index = array.indexOf(string);
+                  boolean ? (array[index] = string) : array.push(string);
+                  localStorage.setItem("songs", JSON.stringify(array));
+                })()
+              : (() => {
+                  localStorage.setItem("songs", JSON.stringify([string]));
+                })();
+          }}
+        >
+          Guardar local
+        </button>
+        <button
+          onClick={() => {
+            setDoc(doc(store, "songs/" + title), { band, contents });
+            if (process.env.DEPLOY_HOOK) fetch(process.env.DEPLOY_HOOK);
+          }}
         >
           Guardar DB
         </button>
+        {typeof localStorage !== "undefined"
+          ? ((item) => {
+              if (!item) return;
+              const array = JSON.parse(item) as string[];
+              return (
+                <li>
+                  {array.map((string, n) => {
+                    const { title, data } = JSON.parse(string);
+                    const { band, contents } = data;
+                    return (
+                      <button
+                        key={n}
+                        onClick={() => {
+                          setTitle(title);
+                          setBand(band);
+                          setContents(contents);
+                        }}
+                      >
+                        {title}
+                      </button>
+                    );
+                  })}
+                </li>
+              );
+            })(localStorage.getItem("songs"))
+          : false}
       </aside>
     </Layout>
   );

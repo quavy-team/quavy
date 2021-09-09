@@ -1,69 +1,56 @@
-import * as solid from "@heroicons/react/solid";
+import * as outline from "@heroicons/react/outline";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import * as react from "react";
+import React, * as react from "react";
 
-type Props = { children: react.ReactNode; className?: string, center?: boolean };
+type Props = {
+  children: react.ReactNode;
+  className?: string;
+  center?: boolean;
+};
 export default function Layout({ children, className, center }: Props) {
   return (
     <>
       <NavBar />
-      <motion.main layout className={`${className} ${center && "center"}`}  >
+      <main className={`${className} ${center && "center"}`}>
         {children}
-      </motion.main>
+      </main>
     </>
   );
 
   function NavBar() {
-    const [hovered, setHovered] = react.useState(false);
-    function NavLink({ href, Icon, children }: any) {
-      // const variants = { hover: { color: "var(--link)" } };
-      // variants={variants} whileHover="hover"
-      return (
-        <Link href={href}>
-          <a>
-            <Icon />
-            <p>{children}</p>
-            {/* <AnimatePresence>
-              {hovered && (
-                <motion.p
-                  key={href}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  {children}
-                </motion.p>
-              )}
-            </AnimatePresence> */}
-          </a>
-        </Link>
-      );
-    }
-
     return (
       // backgroundColor: "var(--light)"
-      <motion.nav
-        whileHover={{ width: "300px" }}
-        onHoverStart={() => setHovered(true)}
-        onHoverEnd={() => setHovered(false)}
-      >
-        <NavLink href="#" Icon={solid.MenuIcon}>
+      <motion.nav>
+        {/* <motion.button onClick={() => {
+        }}></motion.button> */}
+        <NavLink href="#" Icon={outline.MenuIcon}>
           Menu
         </NavLink>
-        <NavLink href="/" Icon={solid.HomeIcon}>
+        <NavLink href="/" Icon={outline.HomeIcon}>
           Home
         </NavLink>
-        <NavLink href="/b/" Icon={solid.SearchIcon}>
+        <NavLink href="/b/" Icon={outline.SearchIcon}>
           Buscar
         </NavLink>
-        <NavLink href="/i/" Icon={solid.InformationCircleIcon}>
+        <NavLink href="/i/" Icon={outline.InformationCircleIcon}>
           About
         </NavLink>
-        <NavLink href="/c/" Icon={solid.UserIcon}>
+        <NavLink href="/c/" Icon={outline.UserIcon}>
           Cuenta
         </NavLink>
       </motion.nav>
+    );
+  }
+
+  function NavLink({ href, Icon, children }: any) {
+    return (
+      <Link href={href}>
+        <a>
+          <Icon />
+          <p>{children}</p>
+        </a>
+      </Link>
     );
   }
 }
