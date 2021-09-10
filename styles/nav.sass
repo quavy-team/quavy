@@ -12,28 +12,53 @@ nav
     align-items: flex-start
     justify-content: center
 
-    border-radius: 15px
-
     background: #fff
+
+    border-radius: 12px
     color: var(--dark)
+    transition: 250ms
+
+    & *:first-child
+        margin-bottom: auto
+    & *:last-child
+        margin-top: auto
+
+    & button
+
+        padding: 6px
+        border: none
+        margin: 6px
+        background: none
+
+        border-radius: 6px
+        color: #333
+        outline: none
+        transition: 250ms
 
     & a
-        font-weight: bold
         display: flex
-        height: 60px
         align-items: center
         justify-content: center
+        padding: 6px
+        margin: 6px
+        border-radius: 6px
+        color: #333
+        font-weight: bold
         transition: 250ms
 
         &:hover
-            color: var(--link)
-
-        &:first-child
-            margin-bottom: auto
-        &:last-child
-            margin-top: auto
+            background: var(--light-accent)
+            color: var(--accent)
 
     & svg
         width: 36px
         height: 36px
-        margin: 12px
+
+    & hr
+        width: 50%
+        height: 1px
+        border: none
+        background: #3333
+
+.menu
+    width: 300px
