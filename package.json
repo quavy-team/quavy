@@ -17,14 +17,12 @@
     "pregit": "git add .",
     "git": "git commit -m update",
     "postgit": "git push",
-    "preview": ""
+    "sw": "tsc src/sw.ts -t esnext --outDir public --skipLibCheck"
   },
   "dependencies": {
     "@heroicons/react": "^1.0.4",
-    "@sanity/client": "^2.16.0",
     "firebase": "^9.0.1",
     "framer-motion": "^4.1.17",
-    "idb-keyval": "^6.0.1",
     "next": "11.1.2",
     "next-sitemap": "^1.6.168",
     "react": "17.0.2",

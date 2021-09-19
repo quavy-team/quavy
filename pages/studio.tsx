@@ -1,10 +1,12 @@
 // import "firebase/auth"
+import { PlusIcon } from "@heroicons/react/outline";
 import { doc, setDoc } from "firebase/firestore/lite";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { auth, store } from "src/app";
 import Layout from "src/layout";
 import styles from "styles/studio.module.sass";
+
 type ContentType = {
   title?: string;
   role?: string;
@@ -16,31 +18,43 @@ export default function Studio() {
   const router = useRouter();
   useEffect(() => void !auth.currentUser && router.push("/c"));
   const [title, setTitle] = useState("");
-  const [band, setBand] = useState([""]);
+  const [bands, setBand] = useState([""]);
   const [contents, setContents] = useState<ContentType[]>([]);
 
   // entries().then(console.log);
 
   return (
     <Layout>
-      <h1>Songly Studio !!</h1>
+      <h1>Quavy Studio !!</h1>
       <input
         type="text"
         placeholder="title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <input
+      <span>
+        {/* {bands.map((band, key) => {
+          const handleChange = (e: any) => setBand(((bands[key] = e.target.value), bands));
+          return (
+            <input key={key} type="text" placeholder="banda" value={band} onChange={handleChange} />
+          );
+        })} */}
+
+        <input
         type="text"
         placeholder="banda"
-        value={band}
+        value={bands}
         onChange={(e) => {
           const value = e.target.value;
           const array = value.split(",");
           const map = array.map((s) => s.trim());
           setBand(map);
         }}
-      />
+        />
+        {/* <button onClick={() => setBand(bands.concat(""))}>
+          <PlusIcon />
+        </button> */}
+      </span>
       {contents.map((content, key) => {
         return <Block content={content} key={key} />;
 
@@ -91,10 +105,7 @@ export default function Studio() {
                 onSelect={(e) => {
                   const area = e.target as HTMLTextAreaElement;
                   const { selectionStart, selectionEnd } = area;
-                  const selection = area.value.slice(
-                    selectionStart,
-                    selectionEnd
-                  );
+                  const selection = area.value.slice(selectionStart, selectionEnd);
                   console.log(selection);
                   const stuff = "((" + selection + "))";
                   const text = area.value!.replace(selection, stuff);
@@ -115,13 +126,11 @@ export default function Studio() {
       })}
 
       <aside className={styles.sidebar}>
-        <button onClick={() => setContents(contents.concat({}))}>
-          Crear Bloque
-        </button>
+        <button onClick={() => setContents(contents.concat({}))}>Crear Bloque</button>
         <button
           onClick={() => {
             const songs = localStorage.getItem("songs");
-            const song = { title, data: { band, contents } };
+            const song = { title, data: { band: bands, contents } };
             const string = JSON.stringify(song);
             // const object =
             songs
@@ -141,7 +150,7 @@ export default function Studio() {
         </button>
         <button
           onClick={() => {
-            setDoc(doc(store, "songs/" + title), { band, contents });
+            setDoc(doc(store, "songs/" + title), { band: bands, contents });
             if (process.env.DEPLOY_HOOK) fetch(process.env.DEPLOY_HOOK);
           }}
         >
