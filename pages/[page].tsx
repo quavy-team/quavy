@@ -1,6 +1,8 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore/lite";
 import { GetStaticProps } from "next";
+import Head from "next/head";
 import Link from "next/link";
+import { Fragment } from "react";
 import { store } from "src/app";
 import Layout from "src/layout";
 import title from "title";
@@ -24,22 +26,28 @@ interface Content {
 
 export default function Cancion({ name, data }: Props) {
   const { band, contents } = data;
+  console.log(band);
+
   return (
     <Layout>
+      <Head>
+        <title>{title(name)}</title>
+      </Head>
       <h1>{title(name)}</h1>
 
       <h2>
-        {band.map((band) => (
-          <Link
-            // href={"/b?" + band.toLowerCase().replace(/\s/, "+")}
-            key={band}
-            href={{
-              pathname: "/b/",
-              query: band.toLowerCase().replace(/\s/g, "+"),
-            }}
-          >
-            {title(band)}
-          </Link>
+        {band.map((band, key) => (
+          <Fragment key={key}>
+            <Link
+              href={{
+                pathname: "/buscar/",
+                query: band.toLowerCase().replace(/\s/g, "+"),
+              }}
+            >
+              {title(band)}
+            </Link>
+            {key < band.length - 5 ? " & " : ""}
+          </Fragment>
         ))}
       </h2>
 
@@ -91,7 +99,5 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   const snap = await getDoc(document);
   const name = snap.id;
   const data = snap.data() ?? null;
-  return data
-    ? { props: { name, data } }
-    : { props: { name, data }, redirect: "/404" };
+  return data ? { props: { name, data } } : { props: { name, data }, redirect: "/404" };
 };

@@ -9,8 +9,8 @@ export const Menu = () => (
     stroke="currentColor"
   >
     <motion.path
-      initial={{ pathLength: 0, opacity: 0 }}
-      animate={{ pathLength: 1, opacity: 1 }}
+      // initial={{ pathLength: 0, opacity: 0 }}
+      // animate={{ pathLength: 1, opacity: 1 }}
       transition={{
         duration: 1,
         delay: 0.2,
@@ -33,8 +33,8 @@ export const Home = () => (
     stroke="currentColor"
   >
     <motion.path
-      initial={{ pathLength: 0, opacity: 0 }}
-      animate={{ pathLength: 1, opacity: 1 }}
+      // initial={{ pathLength: 0, opacity: 0 }}
+      // animate={{ pathLength: 1, opacity: 1 }}
       transition={{
         duration: 1,
         delay: 0.4,
@@ -57,8 +57,8 @@ export const Search = () => (
     stroke="currentColor"
   >
     <motion.path
-      initial={{ pathLength: 0, opacity: 0 }}
-      animate={{ pathLength: 1, opacity: 1 }}
+      // initial={{ pathLength: 0, opacity: 0 }}
+      // animate={{ pathLength: 1, opacity: 1 }}
       transition={{
         duration: 1,
         delay: 0.6,
@@ -81,8 +81,8 @@ export const Chord = () => (
     stroke="currentColor"
   >
     <motion.path
-      initial={{ pathLength: 0, opacity: 0 }}
-      animate={{ pathLength: 1, opacity: 1 }}
+      // initial={{ pathLength: 0, opacity: 0 }}
+      // animate={{ pathLength: 1, opacity: 1 }}
       transition={{
         duration: 1,
         delay: 0.8,
@@ -105,8 +105,8 @@ export const LogIn = () => (
     stroke="currentColor"
   >
     <motion.path
-      initial={{ pathLength: 0, opacity: 0 }}
-      animate={{ pathLength: 1, opacity: 1 }}
+      // initial={{ pathLength: 0, opacity: 0 }}
+      // animate={{ pathLength: 1, opacity: 1 }}
       transition={{
         duration: 1,
         delay: 1,

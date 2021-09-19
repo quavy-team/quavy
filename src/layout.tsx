@@ -7,11 +7,14 @@ type Props = {
   children: react.ReactNode;
   className?: string;
   center?: boolean;
+  [key: string]: any;
 };
+
 export default function Layout({ children, className, center }: Props) {
   return (
     <>
       <NavBar />
+      <Modal />
       <main className={`${className} ${center && "center"}`}>{children}</main>
     </>
   );
@@ -33,17 +36,18 @@ export default function Layout({ children, className, center }: Props) {
             <MenuBtn Icon={icons.Home}>Cambiar color</MenuBtn>
             <hr></hr>
             <motion.h2
-              initial={{ opacity: 0 }}
-              animate={{opacity: 1}}
-            >Songly</motion.h2>
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            >
+              Songly
+            </motion.h2>
           </>
         ) : (
           <>
             <NavLink href="/" Icon={icons.Home}></NavLink>
-            <NavLink href="/b/" Icon={icons.Search}></NavLink>
+            <NavLink href="/buscar/" Icon={icons.Search}></NavLink>
             {/* <NavLink href="/b/" Icon={icons.Duo}></NavLink> */}
-            <NavLink href="/a/" Icon={icons.Chord}></NavLink>
-            <NavLink href="/c/" Icon={icons.LogIn}></NavLink>
+            <NavLink href="/acordes/" Icon={icons.Chord}></NavLink>
+            <NavLink href="/cuenta/" Icon={icons.LogIn}></NavLink>
           </>
         )}
       </motion.nav>
@@ -70,6 +74,37 @@ export default function Layout({ children, className, center }: Props) {
         <Icon />
         {children}
       </motion.button>
+    );
+  }
+
+  function Modal(props: any) {
+    const [_title, setTitle] = react.useState("");
+    const {
+      title,
+      text = false,
+      btn = false,
+      btns = false,
+      input = false,
+      inputs = false,
+    } = props;
+
+    return (
+      <motion.div>
+        <h4>{title}</h4>
+        {text && <p>{text}</p>}
+        {btn && <button {...btn.props}>{btn.text}</button>}
+        {btns &&
+          btns.map((btn: any, n: number) => (
+            <button key={n} {...btn.props}>
+              {btn.text}
+            </button>
+          ))}
+        {input && <input type="text" />}
+        {inputs &&
+          inputs.map((input: any, key: number) => (
+            <input type="text" key={key} {...input.props} />
+          ))}
+      </motion.div>
     );
   }
 }

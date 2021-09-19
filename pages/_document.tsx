@@ -7,7 +7,19 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <link rel="stylesheet" href={this.manrope}></link>
+          <link rel="stylesheet" href={this.manrope} />
+          <link rel="manifest" href="/manifest.json" />
+          <link rel="icon" href="/16px.png" sizes="16x16" />
+          <link rel="icon" href="/32px.png" sizes="32x32" />
+          <link rel="icon" href="/favicon.ico" sizes="48x48" />
+          <link rel="apple-touch-icon" href="/128x128.png" sizes="128x128" />
+          <link rel="apple-touch-icon" href="/192x192.png" sizes="192x192" />
+          <link rel="apple-touch-startup-image" href="/512x512.png" sizes="512x512" />
+          <link rel="apple-touch-startup-image" href="/1024x1024.png" sizes="1024x1024" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="theme-color" content="#fede55" />
+          <meta name="description" content="Welcome to Quavy app" />
         </Head>
         <body>
           <Main />

@@ -5,6 +5,9 @@
   "stylelint": {
     "extends": "stylelint-config-idiomatic-order"
   },
+  "prettier": {
+    "printWidth": 100
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
