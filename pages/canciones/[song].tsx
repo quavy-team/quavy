@@ -1,10 +1,11 @@
 /// <reference path="songs.d.ts" />
-import { collection, getDocs, doc, getDoc } from "firebase/firestore/lite";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore/lite";
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { store } from "src/app";
 import Layout from "src/layout";
+import { slug } from "src/utils";
 import title from "title";
 
 export default function Cancion({ name, data }: Props) {
@@ -68,15 +69,15 @@ export default function Cancion({ name, data }: Props) {
 
 export async function getStaticPaths() {
   const col = collection(store, "songs");
-  const snap = await getDocs(col);
-  const paths = snap.docs.map((doc) => {
-    const page = doc.id.trim().toLowerCase().replace(/\s/g, "_");
-    return { params: { page } };
+  const { docs } = await getDocs(col);
+  const paths = docs.map((doc) => {
+    const song = slug(doc.id);
+    return { params: { song } };
   });
   return { paths, fallback: false };
 }
 
-export const getStaticProps: GetStaticProps = async ({params}) => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { song } = params;
   const document = doc(store, "songs/" + song);
   const snap = await getDoc(document);
