@@ -6,7 +6,23 @@ import { store } from "src/app";
 import Layout from "src/layout";
 import { slug } from "src/utils";
 import title from "title";
-import type { Props } from "src/songs";
+
+interface Props {
+  name: string;
+  data: Data;
+}
+
+interface Data {
+  band: string[];
+  contents: Content[];
+}
+
+interface Content {
+  title: string;
+  role: string;
+  strum: string;
+  text: string;
+}
 
 export default function Cancion({ name, data }: Props) {
   const { band, contents } = data;
