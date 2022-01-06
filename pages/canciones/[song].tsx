@@ -1,4 +1,4 @@
-/// <reference path="songs.d.ts" />
+/// <reference path="../../src/songs.d.ts" />
 import { collection, doc, getDoc, getDocs } from "firebase/firestore/lite";
 import { GetStaticProps } from "next";
 import Head from "next/head";
