@@ -1,52 +1,52 @@
 import { collection, getDocs } from "@firebase/firestore/lite";
-import { AnimatePresence, motion } from "framer-motion";
+import { Card, Input, Text, useInput } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { store } from "src/app";
 import Layout from "src/layout";
+import { slug } from "src/utils";
 import title from "title";
 
 interface Props {
-  map: string[];
+  ids: string[];
 }
 
-export default function Buscar({ map }: Props) {
-  const router = useRouter();
-  const search = Object.keys(router.query)[0] ?? "";
-  const [value, setValue] = useState(search);
+function Song({ id, transition }) {
+  const [opacity, set] = useState(0);
+  const href = "/canciones/" + slug(id);
+  useEffect(() => set(1), []);
+  return (
+    <Card css={{ width: "fit-content", m: "$4" }} style={{ opacity, transition }}>
+      <Link href={href}>{title(id)}</Link>
+    </Card>
+  );
+}
+
+export default function Buscar({ ids }: Props) {
+  useEffect(() => console.table(ids), [ids]);
+  const { query } = useRouter();
+  const [key] = Object.keys(query);
+  const search = useInput(key ?? "");
 
   return (
     <Layout>
-      <motion.h1>Buscar Canciones</motion.h1>
-      <motion.input
+      <Text h1>Buscar canciones</Text>
+      <Input
         placeholder="buscar canciones"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      ></motion.input>
+        bordered
+        color="primary"
+        css={{bg: "white"}}
+        {...search.bindings}
+      />
 
-      <motion.ul key="list" layout>
-        <AnimatePresence>
-          {map.map((id, n) => {
-            console.log(id, n);
-            const href = id.trim().toLowerCase().replace(/\s/g, "_");
-            return (
-              id.toLowerCase().includes(value.toLowerCase()) && (
-                <motion.li
-                  layout="position"
-                  key={id}
-                  custom={id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.25 * n }}
-                >
-                  <Link href={href}>{title(id)}</Link>
-                </motion.li>
-              )
-            );
-          })}
-        </AnimatePresence>
-      </motion.ul>
+      {/* <ul key="list"> */}
+      {ids.map((id, n) => {
+        const matches = slug(id).includes(slug(search.value));
+        const transition = 250 * n + "ms";
+        if (matches) return <Song key={id} id={id} transition={transition} />;
+      })}
+      {/* </ul> */}
     </Layout>
   );
 }
@@ -54,6 +54,6 @@ export default function Buscar({ map }: Props) {
 export async function getStaticProps() {
   const col = collection(store, "songs");
   const { docs } = await getDocs(col);
-  const map = docs.map((doc) => doc.id);
-  return { props: { map } };
+  const ids = docs.map((doc) => doc.id);
+  return { props: { ids } };
 }

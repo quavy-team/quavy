@@ -1,4 +1,5 @@
-// eslint-disable-next-line @next/next/no-document-import-in-page
+/* eslint-disable @next/next/no-document-import-in-page */
+import { CssBaseline } from "@nextui-org/react";
 import Document, { Head, Html, Main, NextScript } from "next/document";
 
 export default class MyDocument extends Document {
@@ -7,6 +8,7 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          {CssBaseline.flush()}
           <link rel="stylesheet" href={this.manrope} />
           <link rel="manifest" href="/manifest.json" />
           <link rel="icon" href="/16px.png" sizes="16x16" />

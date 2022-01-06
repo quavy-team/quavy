@@ -1,110 +1,99 @@
-import { motion } from "framer-motion";
+import { Button, Modal, Text, Tooltip, useModal } from "@nextui-org/react";
 import Link from "next/link";
 import * as react from "react";
-import icons from "src/icons";
+import * as icons from "react-iconly";
+import Main from "src/main";
+import Nav from "src/nav";
+import { slug } from "./utils";
 
 type Props = {
   children: react.ReactNode;
-  className?: string;
-  center?: boolean;
   [key: string]: any;
 };
 
-export default function Layout({ children, className, center }: Props) {
+export default function Layout({ children }: Props) {
+  const [desktop, setDesktop] = react.useState(false);
+  const modal = useModal(false);
+  react.useEffect(() => {
+    const installed = window.matchMedia("(display-mode: standalone)").matches;
+    const { width, height } = window.screen;
+    setDesktop(!!(width / height));
+  }, []);
+
   return (
     <>
-      <NavBar />
-      <Modal />
-      <main className={`${className} ${center && "center"}`}>{children}</main>
+      {/* {installed ?  : <header></header>} */}
+      <NavBar openModal={() => modal.setVisible(true)} />
+      <Menu bindings={modal.bindings} />
+      <Main>{children}</Main>
     </>
   );
+}
 
-  function NavBar() {
-    const [menuOpened, setMenuOpened] = react.useState(false);
-    return (
-      <motion.nav
-        custom={menuOpened}
-        animate={{ width: menuOpened ? 300 : 60 }}
-        transition={{ when: "beforeChildren" }}
-      >
-        <MenuBtn
-          Icon={menuOpened ? icons.Close : icons.Menu}
-          onClick={() => setMenuOpened(!menuOpened)}
-        />
-        {menuOpened ? (
-          <>
-            <MenuBtn Icon={icons.Home}>Cambiar color</MenuBtn>
-            <hr></hr>
-            <motion.h2
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            >
-              Songly
-            </motion.h2>
-          </>
-        ) : (
-          <>
-            <NavLink href="/" Icon={icons.Home}></NavLink>
-            <NavLink href="/buscar/" Icon={icons.Search}></NavLink>
-            {/* <NavLink href="/b/" Icon={icons.Duo}></NavLink> */}
-            <NavLink href="/acordes/" Icon={icons.Chord}></NavLink>
-            <NavLink href="/cuenta/" Icon={icons.LogIn}></NavLink>
-          </>
-        )}
-      </motion.nav>
-    );
-  }
+function NavBar({ openModal }) {
+  return (
+    <Nav>
+      <NavLink href="#" Icon={icons.Setting} onClick={openModal}>
+        Menu
+      </NavLink>
+      <NavLink href="/" Icon={icons.Home}>
+        Home
+      </NavLink>
+      <NavLink href="/buscar/" Icon={icons.Search}>
+        Buscar
+      </NavLink>
+      <NavLink href="/estudio/" Icon={icons.EditSquare}>
+        Estudio
+      </NavLink>
+      <NavLink href="/acordes/" Icon={icons.Filter}>
+        Acordes
+      </NavLink>
+      <NavLink href="/cuenta/" Icon={icons.Login}>
+        Cuenta
+      </NavLink>
+    </Nav>
+  );
+}
 
-  function NavLink({ href, Icon }: any) {
+function NavLink({ children, href, Icon, ...props }: any) {
+  const [portrait, setPortrait] = react.useState(false);
+  const [active, setActive] = react.useState(false);
+  react.useEffect(() => {
+    setPortrait(matchMedia("(orientation: portrait)").matches);
+    const path = location.pathname.slice(1);
+    setActive(path == slug(children) || (!path && children == "Home"));
+  }, []);
+  if (portrait)
     return (
-      <Link href={href} passHref>
-        <motion.a>
-          <Icon />
-        </motion.a>
+      <Link href={href}>
+        <a style={{ background: active ? "#fff3" : "" }} {...props}>
+          <Icon set="bold" />
+          {active && <Text color="white">{children}</Text>}
+        </a>
       </Link>
     );
-  }
+  return (
+    <Link href={href}>
+      <a {...props}>
+        <Tooltip content={children} color="primary" placement="right">
+          <Icon set="bold" />
+        </Tooltip>
+      </a>
+    </Link>
+  );
+}
 
-  function MenuBtn({ children, Icon, ...props }: any) {
-    return (
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        {...props}
-      >
-        <Icon />
-        {children}
-      </motion.button>
-    );
-  }
-
-  function Modal(props: any) {
-    const [_title, setTitle] = react.useState("");
-    const {
-      title,
-      text = false,
-      btn = false,
-      btns = false,
-      input = false,
-      inputs = false,
-    } = props;
-
-    return (
-      <motion.div>
-        <h4>{title}</h4>
-        {text && <p>{text}</p>}
-        {btn && <button {...btn.props}>{btn.text}</button>}
-        {btns &&
-          btns.map((btn: any, n: number) => (
-            <button key={n} {...btn.props}>
-              {btn.text}
-            </button>
-          ))}
-        {input && <input type="text" />}
-        {inputs &&
-          inputs.map((input: any, key: number) => (
-            <input type="text" key={key} {...input.props} />
-          ))}
-      </motion.div>
-    );
-  }
+function Menu({ bindings }) {
+  return (
+    <Modal closeButton blur {...bindings}>
+      <Modal.Header>
+        <Text h4>Settings</Text>
+      </Modal.Header>
+      <Modal.Body>
+        <Button>Cambiar color</Button>
+        <Button>Tema oscuro</Button>
+        <Button>Iniciar sesion</Button>
+      </Modal.Body>
+    </Modal>
+  );
 }

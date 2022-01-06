@@ -1,28 +1,11 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore/lite";
+/// <reference path="songs.d.ts" />
+import { collection, getDocs, doc, getDoc } from "firebase/firestore/lite";
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { Fragment } from "react";
 import { store } from "src/app";
 import Layout from "src/layout";
 import title from "title";
-
-interface Props {
-  name: string;
-  data: Data;
-}
-
-interface Data {
-  band: string[];
-  contents: Content[];
-}
-
-interface Content {
-  title: string;
-  role: string;
-  strum: string;
-  text: string;
-}
 
 export default function Cancion({ name, data }: Props) {
   const { band, contents } = data;
@@ -37,17 +20,17 @@ export default function Cancion({ name, data }: Props) {
 
       <h2>
         {band.map((band, key) => (
-          <Fragment key={key}>
+          <>
             <Link
               href={{
-                pathname: "/buscar/",
+                pathname: "/buscar",
                 query: band.toLowerCase().replace(/\s/g, "+"),
               }}
             >
               {title(band)}
             </Link>
             {key < band.length - 5 ? " & " : ""}
-          </Fragment>
+          </>
         ))}
       </h2>
 
@@ -70,7 +53,7 @@ export default function Cancion({ name, data }: Props) {
         return (
           <section key={key}>
             <h3>
-              {title} & {role}
+              {title} &amp; {role}
             </h3>
             <div>{text}</div>
             <h4>{strum}</h4>
@@ -93,9 +76,9 @@ export async function getStaticPaths() {
   return { paths, fallback: false };
 }
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
-  const { page } = ctx.params!;
-  const document = doc(store, "songs/" + page);
+export const getStaticProps: GetStaticProps = async ({params}) => {
+  const { song } = params;
+  const document = doc(store, "songs/" + song);
   const snap = await getDoc(document);
   const name = snap.id;
   const data = snap.data() ?? null;

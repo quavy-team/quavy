@@ -1,5 +1,5 @@
 // import "firebase/auth"
-import { PlusIcon } from "@heroicons/react/outline";
+import * as next from "@nextui-org/react";
 import { doc, setDoc } from "firebase/firestore/lite";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import { auth, store } from "src/app";
 import Layout from "src/layout";
 import styles from "styles/studio.module.sass";
 
-type ContentType = {
+type Content = {
   title?: string;
   role?: string;
   strum?: string;
@@ -16,29 +16,25 @@ type ContentType = {
 
 export default function Studio() {
   const router = useRouter();
-  useEffect(() => void !auth.currentUser && router.push("/c"));
+  useEffect(() => void !auth.currentUser && router.push("/cuenta"));
   const [title, setTitle] = useState("");
   const [bands, setBand] = useState([""]);
-  const [contents, setContents] = useState<ContentType[]>([]);
+  const [contents, setContents] = useState<Content[]>([]);
 
   // entries().then(console.log);
 
   return (
     <Layout>
-      <h1>Quavy Studio !!</h1>
-      <input
-        type="text"
+      <next.Text h1>Quavy Studio !!</next.Text>
+      <next.Input
         placeholder="title"
+        bordered
+        color="primary"
+        css={{bg: "white"}}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
       <span>
-        {/* {bands.map((band, key) => {
-          const handleChange = (e: any) => setBand(((bands[key] = e.target.value), bands));
-          return (
-            <input key={key} type="text" placeholder="banda" value={band} onChange={handleChange} />
-          );
-        })} */}
 
         <input
         type="text"
@@ -58,7 +54,7 @@ export default function Studio() {
       {contents.map((content, key) => {
         return <Block content={content} key={key} />;
 
-        function Block({ content }: { content: ContentType }) {
+        function Block({ content }: { content: Content }) {
           const [title, setTitle] = useState(content.title);
           const [role, setRole] = useState(content.role);
           const [strum, setStrum] = useState(content.strum);
