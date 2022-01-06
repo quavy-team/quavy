@@ -1,4 +1,3 @@
-/// <reference path="../../src/songs.d.ts" />
 import { collection, doc, getDoc, getDocs } from "firebase/firestore/lite";
 import { GetStaticProps } from "next";
 import Head from "next/head";
@@ -7,6 +6,7 @@ import { store } from "src/app";
 import Layout from "src/layout";
 import { slug } from "src/utils";
 import title from "title";
+import type { Props } from "src/songs";
 
 export default function Cancion({ name, data }: Props) {
   const { band, contents } = data;
