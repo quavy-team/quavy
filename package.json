@@ -25,25 +25,24 @@
     "@stitches/react": "^1.2.6",
     "firebase": "^9.0.1",
     "framer-motion": "^5.5.5",
-    "next": "11.1.2",
+    "next": "^12.0.7",
+    "next-pwa": "^5.4.4",
     "next-sitemap": "^1.6.168",
     "next-themes": "^0.0.15",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-iconly": "^2.2.5",
     "sass": "^1.39.0",
-    "title": "^3.4.3"
+    "title": "^3.4.3",
+    "zustand": "^3.6.8"
   },
   "devDependencies": {
     "@types/react": "17.0.20",
     "@types/title": "^3.4.1",
+    "@typescript-eslint/types": "^5.9.0",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.2",
     "prettier": "^2.3.2",
-    "stylelint": "^13.13.1",
-    "stylelint-config-idiomatic-order": "^8.1.0",
-    "stylelint-order": "^4.1.0",
-    "stylelint-scss": "^3.20.1",
     "typescript": "4.4.2"
   }
 }

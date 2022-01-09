@@ -1,3 +1,5 @@
+import title from "title";
+
 export function slug(id: string) {
   return id
     .trim()
@@ -5,4 +7,8 @@ export function slug(id: string) {
     .normalize("NFD")
     .replace(/\s/g, "-")
     .replace(/[\u0300-\u036f]/g, "");
+}
+
+export function unslug(id: string) {
+  return title(id.replace(/-/g, " "))
 }

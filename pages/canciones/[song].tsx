@@ -87,7 +87,9 @@ export async function getStaticPaths() {
   const col = collection(store, "songs");
   const { docs } = await getDocs(col);
   const paths = docs.map((doc) => {
-    const song = slug(doc.id);
+    const data = doc.data();
+    const song = slug(data.title);
+    // const song = slug(doc.id);
     return { params: { song } };
   });
   return { paths, fallback: false };
@@ -100,4 +102,5 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const name = snap.id;
   const data = snap.data() ?? null;
   return data ? { props: { name, data } } : { props: { name, data }, redirect: "/404" };
+  // return { props: { name, data }, redirect: data ? "" : "/404" };
 };

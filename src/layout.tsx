@@ -1,5 +1,5 @@
 import { Button, Modal, Text, Tooltip, useModal } from "@nextui-org/react";
-import Link from "next/link";
+import NextLink from "next/link";
 import * as react from "react";
 import * as icons from "react-iconly";
 import Main from "src/main";
@@ -12,13 +12,13 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  const [desktop, setDesktop] = react.useState(false);
+  // const [desktop, setDesktop] = react.useState(false);
   const modal = useModal(false);
-  react.useEffect(() => {
-    const installed = window.matchMedia("(display-mode: standalone)").matches;
-    const { width, height } = window.screen;
-    setDesktop(!!(width / height));
-  }, []);
+  // react.useEffect(() => {
+  //   const installed = window.matchMedia("(display-mode: standalone)").matches;
+  //   const { width, height } = window.screen;
+  //   setDesktop(!!(width / height));
+  // }, []);
 
   return (
     <>
@@ -63,23 +63,25 @@ function NavLink({ children, href, Icon, ...props }: any) {
     const path = location.pathname.slice(1);
     setActive(path == slug(children) || (!path && children == "Home"));
   }, []);
+
   if (portrait)
     return (
-      <Link href={href}>
-        <a style={{ background: active ? "#fff3" : "" }} {...props}>
+        <NextLink href={href} passHref>
+          <a style={{background: active ? "#fff3" : ""}} {...props}>
           <Icon set="bold" />
-          {active && <Text color="white">{children}</Text>}
-        </a>
-      </Link>
+
+            {active && <Text color="white">{children}</Text>}
+          </a>
+        </NextLink>
     );
   return (
-    <Link href={href}>
+    <NextLink href={href}>
       <a {...props}>
         <Tooltip content={children} color="primary" placement="right">
           <Icon set="bold" />
         </Tooltip>
       </a>
-    </Link>
+    </NextLink>
   );
 }
 

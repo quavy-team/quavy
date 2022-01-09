@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
 import themes from "src/themes";
+import Layout from "src/layout"
 // import "styles/styles.sass";
 
 const globals = globalCss({
@@ -20,9 +21,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider attribute="class" value={themes}>
       <NextUIProvider>
-        <LayoutGroup>
+        <Layout>
           <Component {...pageProps} />
-        </LayoutGroup>
+        </Layout>
       </NextUIProvider>
     </ThemeProvider>
   );

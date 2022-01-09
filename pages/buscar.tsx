@@ -7,27 +7,37 @@ import { store } from "src/app";
 import Layout from "src/layout";
 import { slug } from "src/utils";
 import title from "title";
+import { Block } from "types/estudio";
 
+interface Song {
+  title: string;
+  bands: string[];
+  blocks: Block[];
+}
 interface Props {
-  ids: string[];
+  docs: Song[];
 }
 
-function Song({ id, transition }) {
+function Song({ name, bands, transition }) {
   const [opacity, set] = useState(0);
-  const href = "/canciones/" + slug(id);
+  const href = "/canciones/" + slug(name);
   useEffect(() => set(1), []);
   return (
-    <Card css={{ width: "fit-content", m: "$4" }} style={{ opacity, transition }}>
-      <Link href={href}>{title(id)}</Link>
-    </Card>
+    <Link href={href} passHref>
+      <Card css={{ width: "fit-content", m: "$4" }} style={{ opacity, transition }}>
+        <Text h5>{title(name)}</Text>
+        <Text h6>{title(bands.join(" & "))}</Text>
+      </Card>
+    </Link>
   );
 }
 
-export default function Buscar({ ids }: Props) {
-  useEffect(() => console.table(ids), [ids]);
+export default function Buscar({ docs }: Props) {
   const { query } = useRouter();
   const [key] = Object.keys(query);
-  const search = useInput(key ?? "");
+  const { bindings, value, setValue } = useInput(key ?? "");
+  useEffect(() => console.table(docs, ["title"]), [docs]);
+  useEffect(() => setValue(key), [setValue, key]);
 
   return (
     <Layout>
@@ -36,15 +46,17 @@ export default function Buscar({ ids }: Props) {
         placeholder="buscar canciones"
         bordered
         color="primary"
-        css={{bg: "white"}}
-        {...search.bindings}
+        css={{ bg: "white" }}
+        {...bindings}
       />
 
       {/* <ul key="list"> */}
-      {ids.map((id, n) => {
-        const matches = slug(id).includes(slug(search.value));
+      {docs.map((doc, n) => { 
+        const { title, bands } = doc;
+        const content = title.concat(bands.join());
+        const matches = value ? slug(content).includes(slug(value)) : true;
         const transition = 250 * n + "ms";
-        if (matches) return <Song key={id} id={id} transition={transition} />;
+        if (matches) return <Song key={title} name={title} bands={bands} transition={transition} />;
       })}
       {/* </ul> */}
     </Layout>
@@ -54,6 +66,6 @@ export default function Buscar({ ids }: Props) {
 export async function getStaticProps() {
   const col = collection(store, "songs");
   const { docs } = await getDocs(col);
-  const ids = docs.map((doc) => doc.id);
-  return { props: { ids } };
+  const data = docs.map((doc) => doc.data());
+  return { props: { docs: data } };
 }

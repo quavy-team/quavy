@@ -1,10 +1,12 @@
 import { createStitches } from "@stitches/react";
 export const { styled, css } = createStitches({
   utils: {
-    // box model
+    // size
     size: (value) => ({ width: value, height: value }),
     space: (value) => ({ margin: value, padding: value }),
     br: (value) => ({ borderRadius: value }),
+    // compound utils
+    box: (size) => ({ size, br: size / 3 }),
 
     m: (margin) => ({ margin }),
     mt: (marginTop) => ({ marginTop }),
@@ -29,7 +31,7 @@ export const { styled, css } = createStitches({
     radialG: (value) => ({ backgroundImage: `radial-gradient(${value})` }),
 
     // utils
-    hover: (value) => ({ "&:hover": value }),
+    onHover: (value) => ({ "&:hover": value }),
   },
   media: {
     web: "(display-mode: browser)",
