@@ -1,15 +1,16 @@
 import { globalCss, NextUIProvider } from "@nextui-org/react";
-import { LayoutGroup } from "framer-motion";
 import { ThemeProvider } from "next-themes";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
+import Layout from "src/layout";
 import themes from "src/themes";
-import Layout from "src/layout"
 // import "styles/styles.sass";
 
 const globals = globalCss({
   "*": { transition: "250ms" },
-  html: { background: "#f5faff" },
+  // bg #f5faff
+  html: { cursor: "url('/cursor.svg'), auto" },
+  a: { cursor: "url('/pointer.svg'), pointer" },
 });
 
 export default function App({ Component, pageProps }: AppProps) {

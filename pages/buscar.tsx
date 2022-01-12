@@ -1,5 +1,6 @@
-import { collection, getDocs } from "@firebase/firestore/lite";
+import { collection } from "@firebase/firestore/lite";
 import { Card, Input, Text, useInput } from "@nextui-org/react";
+import { getDocs } from "firebase/firestore/lite";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -7,37 +8,35 @@ import { store } from "src/app";
 import Layout from "src/layout";
 import { slug } from "src/utils";
 import title from "title";
-import { Block } from "types/estudio";
+import { Props, SongProps } from "types/buscar";
 
-interface Song {
-  title: string;
-  bands: string[];
-  blocks: Block[];
-}
-interface Props {
-  docs: Song[];
-}
-
-function Song({ name, bands, transition }) {
+function Song({ cancion, transition }: SongProps) {
   const [opacity, set] = useState(0);
-  const href = "/canciones/" + slug(name);
+  const { titulo, artistas } = cancion;
+  const [artista] = artistas;
+  const href = `${slug(artista)}/${slug(titulo)}`;
   useEffect(() => set(1), []);
   return (
-    <Link href={href} passHref>
-      <Card css={{ width: "fit-content", m: "$4" }} style={{ opacity, transition }}>
-        <Text h5>{title(name)}</Text>
-        <Text h6>{title(bands.join(" & "))}</Text>
-      </Card>
+    <Link href={href} >
+      <a>
+        <Card css={{ width: "fit-content", m: "$4" }} style={{ opacity, transition }}>
+          <Text h5>{title(titulo)}</Text>
+          <Text h6>{title(artistas.join(" & "))}</Text>
+        </Card>
+      </a>
     </Link>
   );
 }
 
-export default function Buscar({ docs }: Props) {
+export default function Buscar({ canciones }: Props) {
   const { query } = useRouter();
-  const [key] = Object.keys(query);
-  const { bindings, value, setValue } = useInput(key ?? "");
-  useEffect(() => console.table(docs, ["title"]), [docs]);
-  useEffect(() => setValue(key), [setValue, key]);
+  console.log(query);
+
+  // const [key] = Object.keys(query);
+  // const { bindings, value, setValue } = useInput(key ?? "");
+  const { bindings, value, setValue } = useInput("");
+  useEffect(() => console.table(canciones, ["title"]), [canciones]);
+  // useEffect(() => setValue(key), [setValue, key]);
 
   return (
     <Layout>
@@ -51,12 +50,12 @@ export default function Buscar({ docs }: Props) {
       />
 
       {/* <ul key="list"> */}
-      {docs.map((doc, n) => { 
-        const { title, bands } = doc;
-        const content = title.concat(bands.join());
+      {canciones.map((cancion, n) => {
+        const { titulo, artistas } = cancion;
+        const content = titulo.concat(artistas.join());
         const matches = value ? slug(content).includes(slug(value)) : true;
         const transition = 250 * n + "ms";
-        if (matches) return <Song key={title} name={title} bands={bands} transition={transition} />;
+        if (matches) return <Song key={`song:${n}`} cancion={cancion} transition={transition} />;
       })}
       {/* </ul> */}
     </Layout>
@@ -64,8 +63,15 @@ export default function Buscar({ docs }: Props) {
 }
 
 export async function getStaticProps() {
-  const col = collection(store, "songs");
-  const { docs } = await getDocs(col);
-  const data = docs.map((doc) => doc.data());
-  return { props: { docs: data } };
+  const ref = collection(store, "artistas");
+  const { docs } = await getDocs(ref);
+  const artistas = docs.map((doc) => doc.id);
+  const [canciones] = await Promise.all(
+    artistas.map(async (artista) => {
+      const ref = collection(store, "artistas", artista, "canciones");
+      const { docs } = await getDocs(ref);
+      return docs.map((doc) => doc.data());
+    })
+  );
+  return { props: { canciones } };
 }
