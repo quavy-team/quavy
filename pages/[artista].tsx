@@ -8,7 +8,7 @@ import { Cancion } from "types/buscar";
 
 interface Props {
   artista: string;
-  canciones: Cancion[]
+  canciones: Cancion[];
 }
 
 export default function Artista(props: Props) {
@@ -16,9 +16,9 @@ export default function Artista(props: Props) {
   return (
     <>
       <Text h1>{title(artista)}</Text>
-      {canciones.map((cancion, n) => (
-        <NextLink key={`cancion:${n}`} href={`${slug(artista)}/${slug(cancion.titulo)}`} passHref>
-          <Link>{cancion.titulo}</Link>
+      {canciones.map(({ titulo }, n) => (
+        <NextLink key={`cancion:${n}`} href={`${slug(artista)}/${slug(titulo)}`} passHref>
+          <Link>{titulo}</Link>
         </NextLink>
       ))}
     </>

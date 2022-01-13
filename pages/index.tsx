@@ -1,7 +1,6 @@
+import { Text } from "@nextui-org/react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Layout from "src/layout";
-import {Text} from "@nextui-org/react"
 
 const Home: NextPage = () => {
   const verification = "ZZ5PyjP_GYDCeTkuTebsWOhQgdoiWH2XbJYpnxFueIk";

@@ -10,5 +10,13 @@ export function slug(id: string) {
 }
 
 export function unslug(id: string) {
-  return title(id.replace(/-/g, " "))
+  return title(id.replace(/-/g, " "));
+}
+
+export async function handle<T>(promise: Promise<T>): Promise<[T, Error]> {
+  try {
+    return [await promise, null]
+  } catch (e) {
+    return [null, e]
+  }
 }

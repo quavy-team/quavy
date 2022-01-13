@@ -4,11 +4,15 @@ import Link from "next/link";
 import { store } from "src/app";
 import { slug } from "src/utils";
 import { Props } from "types/canciones";
+import Head from "next/head"
 
 export default function Cancion(props: Props) {
   const { titulo, artistas, bloques } = props;
   return (
     <>
+      <Head>
+        
+      </Head>
       {/* TITULO */}
       <next.Text h1>{titulo}</next.Text>
       {/* ARTISTAS */}
@@ -48,7 +52,13 @@ export default function Cancion(props: Props) {
             const key = `tooltip:${word}:${index}.${n}`;
             return (
               <next.Tooltip key={key} content={word} trigger="click">
-                <next.Text b css={{ cursor: "pointer" }}>
+                <next.Text
+                  b
+                  css={{
+                    cursor: "pointer",
+                    backgroundImage: "linear-gradient(transparent 60%, $secondary 40%)",
+                  }}
+                >
                   {word}
                 </next.Text>
               </next.Tooltip>
@@ -63,7 +73,7 @@ export default function Cancion(props: Props) {
                 backgroundImage: "linear-gradient(transparent 60%, transparent 40%)",
                 "&:hover": {
                   backgroundImage: "linear-gradient(transparent 60%, $secondary 40%)",
-                  b: { color: "$primary" },
+                  b: { color: "black" },
                 },
               }}
             >
