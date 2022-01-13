@@ -1,5 +1,5 @@
 import * as next from "@nextui-org/react";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore/lite";
+import * as lite from "firebase/firestore/lite";
 import Link from "next/link";
 import { store } from "src/app";
 import { slug } from "src/utils";
@@ -92,14 +92,14 @@ export default function Cancion(props: Props) {
 }
 
 export async function getStaticPaths() {
-  const ref = collection(store, "artistas");
-  const { docs } = await getDocs(ref);
+  const ref = lite.collection(store, "artistas");
+  const { docs } = await lite.getDocs(ref);
   const artistas = docs.map((doc) => doc.id);
 
   const [canciones] = await Promise.all(
     artistas.map(async (artista) => {
-      const ref = collection(store, "artistas", artista, "canciones");
-      const { docs } = await getDocs(ref);
+      const ref = lite.collection(store, "artistas", artista, "canciones");
+      const { docs } = await lite.getDocs(ref);
       return docs.map((doc) => doc.id);
     })
   );
@@ -114,7 +114,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const [artista, cancion] = params.canciones;
-  const ref = doc(store, "artistas", artista, "canciones", cancion);
-  const snap = await getDoc(ref);
+  const ref = lite.doc(store, "artistas", artista, "canciones", cancion);
+  const snap = await lite.getDoc(ref);
   return { props: snap.data() };
 }
