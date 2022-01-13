@@ -34,7 +34,7 @@ function NavBar({ openModal }) {
   return (
     <Nav>
       <NavLink href="#" Icon={icons.Setting} onClick={openModal}>
-        Menu
+        Configuracion
       </NavLink>
       <NavLink href="/" Icon={icons.Home}>
         Home
@@ -89,7 +89,7 @@ function Menu({ bindings }) {
   return (
     <Modal closeButton blur {...bindings}>
       <Modal.Header>
-        <Text h4>Settings</Text>
+        <Text h4>Configuracion</Text>
       </Modal.Header>
       <Modal.Body>
         <Button>Cambiar color</Button>

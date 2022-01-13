@@ -11,7 +11,9 @@ export default function Cancion(props: Props) {
   return (
     <>
       <Head>
-        
+        <title>
+          {titulo} @ {artistas.join(" & ")}
+        </title>
       </Head>
       {/* TITULO */}
       <next.Text h1>{titulo}</next.Text>
