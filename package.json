@@ -1,48 +1,65 @@
 {
-  "name": "quavy-app",
-  "version": "0.1.0",
+  "name": "quavy",
+  "version": "2.1.0",
   "private": true,
-  "stylelint": {
-    "extends": "stylelint-config-idiomatic-order"
-  },
-  "prettier": {
-    "printWidth": 100
-  },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "postbuild": "next-sitemap",
-    "start": "next start",
+    "test": "next lint",
     "lint": "next lint",
-    "pregit": "git add .",
-    "git": "git commit -m update",
-    "postgit": "git push",
-    "sw": "tsc src/sw.ts -t esnext --outDir public --skipLibCheck"
+    "build": "next build",
+    "postbuild": "next-sitemap --config sitemap.config.js",
+    "start": "next start"
+  },
+  "prettier": {
+    "semi": false,
+    "bracketSameLine": true
   },
   "dependencies": {
-    "@heroicons/react": "^1.0.4",
-    "@nextui-org/react": "^1.0.2-alpha.1",
-    "@stitches/react": "^1.2.6",
-    "firebase": "^9.0.1",
-    "framer-motion": "^5.5.5",
-    "next": "^12.0.7",
-    "next-pwa": "^5.4.4",
-    "next-sitemap": "^1.6.168",
-    "next-themes": "^0.0.15",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-iconly": "^2.2.5",
-    "sass": "^1.39.0",
+    "@fontsource/manrope": "^4.5.9",
+    "@fontsource/metropolis": "^4.5.3",
+    "@next-auth/prisma-adapter": "^1.0.3",
+    "@nextui-org/react": "latest",
+    "@prisma/client": "latest",
+    "@tiptap/extension-bold": "^2.0.0-beta.28",
+    "@tiptap/extension-bubble-menu": "^2.0.0-beta.56",
+    "@tiptap/extension-code": "^2.0.0-beta.28",
+    "@tiptap/extension-document": "^2.0.0-beta.17",
+    "@tiptap/extension-highlight": "^2.0.0-beta.33",
+    "@tiptap/extension-paragraph": "^2.0.0-beta.26",
+    "@tiptap/extension-text": "^2.0.0-beta.17",
+    "@tiptap/html": "^2.0.0-beta.175",
+    "@tiptap/react": "^2.0.0-beta.109",
+    "await-to-js": "^3.0.0",
+    "axios": "^0.27.2",
+    "framer-motion": "^6.3.3",
+    "fuse.js": "^6.6.2",
+    "next": "latest",
+    "next-auth": "latest",
+    "next-pwa": "^5.5.4",
+    "next-seo": "latest",
+    "next-sitemap": "latest",
+    "next-themes": "latest",
+    "phosphor-react": "^1.4.1",
+    "preact": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "slug": "^5.3.0",
+    "swr": "^1.3.0",
     "title": "^3.4.3",
-    "zustand": "^3.6.8"
+    "valtio": "^1.6.0",
+    "zuwarten": "^2.0.0"
   },
   "devDependencies": {
-    "@types/react": "17.0.20",
+    "@types/node": "^17.0.42",
+    "@types/react": "^18.0.9",
+    "@types/slug": "^5.0.3",
     "@types/title": "^3.4.1",
     "@typescript-eslint/types": "^5.9.0",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.2",
     "prettier": "^2.3.2",
-    "typescript": "4.4.2"
+    "prisma": "latest",
+    "typescript": "^4.5.5",
+    "webpack-bundle-analyzer": "^4.5.0"
   }
 }

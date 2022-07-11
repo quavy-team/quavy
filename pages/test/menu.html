@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menu</title>
+    <style>
+        header nav {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        header nav a {
+            display: block;
+        }
+      @media (orientation: landscape) {
+        header p {
+          display: none;
+        }
+      }
+      @media (orientation: portrait) {
+        header nav {
+          display: none;
+          background: red;
+        }
+        header:hover nav {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p>Menu</p>
+      <nav>
+        <a href="">Link</a>
+        <a href="">Link</a>
+        <a href="">Link</a>
+        <a href="">Link</a>
+      </nav>
+    </header>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://quavy.vercel.app
+
+# Sitemaps
+Sitemap: https://quavy.vercel.app/sitemap.xml
