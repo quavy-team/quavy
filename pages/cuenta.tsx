@@ -10,7 +10,8 @@ import {
   useModal,
 } from "@nextui-org/react"
 import type * as Prisma from "@prisma/client"
-import Auth from "components/web/Auth"
+// import Auth from "source/components/web/Auth"
+import {Auth} from "@components/web"
 import Web from "layouts/web"
 import { useVoid } from "lib/hooks"
 import { proxy, snapshot, useSnapshot } from "valtio"

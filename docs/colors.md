@@ -2,13 +2,13 @@
 
 ## Brand
 
-![Brand Colors](/assets/brand.png)
+![Brand Colors](assets/brand.png)
 
 - FEDE55 + FF9E61
 
 ## Semantic
 
-![Color Palette](/assets/palette.png)
+![Color Palette](assets/palette.png)
 
 - Tetradic combination
 - Green for success

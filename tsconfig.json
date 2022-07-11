@@ -16,9 +16,14 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "nextui": ["node_modules/@nextui-org/react"]
+      // "@components/*": ["source/components/*"],
+      // "@styles/*": ["source/styles/*"],
+      // "@helpers": ["source/helpers"],
+      // "@utils": ["source/utils"],
+      // "@types": ["source/types"],
+      "@*": ["source/*"],
+      "@nextui": ["@nextui-org/react"],
     }
-    // "types": ["/src/types.d.ts"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

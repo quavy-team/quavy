@@ -25,7 +25,7 @@ export default function Buscar({ songs }: Props) {
   )
   const search = useCallback(
     function (e) {
-      const v = e.target.value as string;
+      const v = e.target.value as string
       $matches(v ? fuse.search(v).map((x) => x.item) : songs)
     },
     [songs, fuse]

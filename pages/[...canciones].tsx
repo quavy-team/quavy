@@ -1,11 +1,10 @@
-import { Button, Text, Card } from "@nextui-org/react"
+import { Aside, Header } from "@components/web"
+import { Button, Card, Text } from "@nextui-org/react"
 import { PrismaClient, Profile, Song } from "@prisma/client"
-import Aside from "components/web/Aside"
-import Header from "components/web/Header"
+import type { JSONContent } from "@tiptap/react"
 import Web from "layouts/web"
 import Link from "next/link"
 import { Heart } from "phosphor-react"
-import type { JSONContent } from "@tiptap/react"
 import slug from "slug"
 
 interface Data extends Song {
@@ -55,7 +54,7 @@ export default function Canción(song: Data) {
                 {para.content.map((span, k) => {
                   if (!span.marks) return span.text
                   const end = para.content.findIndex(
-                    (val, i) => (i >= k && !val.marks)
+                    (val, i) => i >= k && !val.marks
                   )
                   const nodes = para.content.splice(k, end - k)
                   return (

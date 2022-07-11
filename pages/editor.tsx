@@ -1,8 +1,4 @@
-import axios from "axios"
-import Tiptap from "components/Tiptap"
-import Web from "layouts/web"
-import { useUser } from "lib/hooks"
-import { useRouter } from "next/router"
+import Tiptap from "@components/Tiptap"
 import {
   Button,
   Col,
@@ -11,8 +7,12 @@ import {
   Loading,
   Row,
   Spacer,
-  Text,
-} from "nextui"
+  Text
+} from "@nextui-org/react"
+import axios from "axios"
+import Web from "layouts/web"
+import { useUser } from "lib/hooks"
+import { useRouter } from "next/router"
 import { useCallback, useEffect } from "react"
 import { proxy, snapshot, useSnapshot } from "valtio"
 
