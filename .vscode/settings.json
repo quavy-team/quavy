@@ -3,5 +3,6 @@
     "source.organizeImports": true,
     "source.fixAll": true
   },
-  "svg.preview.background": "transparent"
+  "cSpell.words": ["Canva", "FEDE", "Firestore", "Preact", "quavy", "Tiptap"],
+  "prisma.fileWatcher": true
 }

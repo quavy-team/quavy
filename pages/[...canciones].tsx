@@ -1,132 +1,102 @@
-import * as next from "@nextui-org/react";
-import * as lite from "firebase/firestore/lite";
-import Link from "next/link";
-import { store } from "src/app";
-import { slug } from "src/utils";
-import { Props } from "types/canciones";
-import Head from "next/head"
+import { Button, Text, Card } from "@nextui-org/react"
+import { PrismaClient, Profile, Song } from "@prisma/client"
+import Aside from "components/web/Aside"
+import Header from "components/web/Header"
+import Web from "layouts/web"
+import Link from "next/link"
+import { Heart } from "phosphor-react"
+import type { JSONContent } from "@tiptap/react"
+import slug from "slug"
 
-export default function Cancion(props: Props) {
-  const { titulo, artistas, bloques } = props;
+interface Data extends Song {
+  authors: Profile[]
+  lyrics: {
+    title: string
+    role: string
+    strum: { [key: string]: string }
+    json: JSONContent
+  }[]
+}
+
+export default function Canción(song: Data) {
+  console.log(song)
   return (
     <>
-      <Head>
-        <title>
-          {titulo} @ {artistas.join(" & ")}
-        </title>
-      </Head>
-      {/* TITULO */}
-      <next.Text h1>{titulo}</next.Text>
-      {/* ARTISTAS */}
-      <next.Text h2>
-        {artistas.map((artista, index) => (
+      <Text h1>{song.title}</Text>
+
+      <Text h2>
+        {song.authors.map(({ name }, i) => (
           <>
-            <Link key={artista} href={`/${slug(artista)}`} passHref>
-              <next.Link
-                css={{
-                  display: "inline",
-                  color: "#333",
-                  "&:hover": { color: "$primary" },
-                }}
-              >
-                {artista}
-              </next.Link>
+            <Link key={name} href={slug(name)}>
+              {name}
             </Link>
-            {index !== artistas.length - 1 && " & "}
+            {++i != song.authors.length && ", "}
           </>
         ))}
-      </next.Text>
-      {/* BLOQUES */}
-      {bloques.map((bloque, index) => {
-        const { verso, rol, texto } = bloque;
-        const reversos = /(\(\(.+?\)\))/g;
-        const reacordes = /(\|.+?\|)/g;
-        const versos = texto.split(reversos);
-        console.log("array: ", versos);
+      </Text>
 
-        const text = versos.map((text, n) => {
-          if (!text.trim()) return " ";
-          const texto = text.replace("((", "").replace("))", "");
-          const array = texto.split(reacordes);
-          console.log(array);
-          const txt = array.map((word) => {
-            if (!reacordes.test(word)) return word;
-            const key = `tooltip:${word}:${index}.${n}`;
-            return (
-              <next.Tooltip key={key} content={word} trigger="click">
-                <next.Text
-                  b
-                  css={{
-                    cursor: "pointer",
-                    backgroundImage: "linear-gradient(transparent 60%, $secondary 40%)",
-                  }}
-                >
-                  {word}
-                </next.Text>
-              </next.Tooltip>
-            );
-          });
-          return (
-            <next.Text
-              key={`texto:${index}.${n}`}
-              span
-              css={{
-                transition: "250ms",
-                backgroundImage: "linear-gradient(transparent 60%, transparent 40%)",
-                "&:hover": {
-                  backgroundImage: "linear-gradient(transparent 60%, $secondary 40%)",
-                  b: { color: "black" },
-                },
-              }}
-            >
-              {txt}
-            </next.Text>
-          );
-        });
-        return (
-          <next.Card key={`bloque: ${index}`} bordered shadow={false}>
-            <next.Card.Header>
-              <next.Text h4>
-                Verso {verso} &amp; {rol}
-              </next.Text>
-            </next.Card.Header>
-            <next.Card.Body>
-              <next.Text>{text}</next.Text>
-            </next.Card.Body>
-            <next.Card.Footer css={{ justifyContent: "end" }}>
-              <next.Text h6>RASGUIDO</next.Text>
-            </next.Card.Footer>
-          </next.Card>
-        );
-      })}
+      <Header>
+        {Object.keys(song.chords).map((chord, i) => (
+          <Text b key={chord + i}>
+            {chord}
+          </Text>
+        ))}
+      </Header>
+
+      <Aside>
+        <Button auto light icon={<Heart />} />
+      </Aside>
+
+      {song.lyrics.map((section, i) => (
+        <Card key={`card:${i}`}>
+          <Card.Body>
+            {section.json.content.map((para, j) => (
+              <p key={`${i}:${j}`}>
+                {para.content.map((span, k) => {
+                  if (!span.marks) return span.text
+                  const end = para.content.findIndex(
+                    (val, i) => (i >= k && !val.marks)
+                  )
+                  const nodes = para.content.splice(k, end - k)
+                  return (
+                    <span key={`${i}:${j}:${k}`}>
+                      {nodes.map((node, m) => {
+                        const types = node.marks.map((mark) => mark.type)
+                        if (!types.includes("bold")) return node.text
+                        return (
+                          <strong key={`${i}:${j}:${k}:${m}`}>
+                            {node.text}
+                          </strong>
+                        )
+                      })}
+                    </span>
+                  )
+                })}
+              </p>
+            ))}
+          </Card.Body>
+        </Card>
+      ))}
+
+      <pre>{JSON.stringify(song, null, 2)}</pre>
     </>
-  );
+  )
+}
+
+Canción.Layout = Web
+
+export async function getStaticProps({ params }) {
+  const prisma = new PrismaClient()
+  const where = { id: params.canciones.join("/") }
+  const include = { authors: true }
+  return { props: await prisma.song.findUnique({ where, include }) }
 }
 
 export async function getStaticPaths() {
-  const ref = lite.collection(store, "artistas");
-  const { docs } = await lite.getDocs(ref);
-  const artistas = docs.map((doc) => doc.id);
-
-  const [canciones] = await Promise.all(
-    artistas.map(async (artista) => {
-      const ref = lite.collection(store, "artistas", artista, "canciones");
-      const { docs } = await lite.getDocs(ref);
-      return docs.map((doc) => doc.id);
-    })
-  );
-
-  const paths = canciones.map((cancion, index) => {
-    const artista = artistas[index];
-    return { params: { canciones: [artista, cancion] } };
-  });
-
-  return { paths, fallback: false };
-}
-
-export async function getStaticProps({ params }) {
-  const [artista, cancion] = params.canciones;
-  const ref = lite.doc(store, "artistas", artista, "canciones", cancion);
-  const snap = await lite.getDoc(ref);
-  return { props: snap.data() };
+  const prisma = new PrismaClient()
+  const songs = await prisma.song.findMany({ select: { id: true } })
+  const paths = songs.map((song) => ({
+    params: { canciones: song.id.split("/") },
+  }))
+  return { paths, fallback: false }
 }
