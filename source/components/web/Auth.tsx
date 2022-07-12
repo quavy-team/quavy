@@ -12,10 +12,11 @@ import { signIn as signInWith } from "next-auth/react"
 import { useCallback } from "react"
 import { proxy, snapshot, useSnapshot } from "valtio"
 import until from "zuwarten"
+import axios from "axios"
+import to from "await-to-js"
 
 interface Event {
-  target: {value: string
-  }
+  target: { value: string }
 }
 
 const state = proxy({
@@ -42,17 +43,16 @@ async function signIn() {
 }
 
 async function signUp() {
-  const snap = snapshot(state.data)
+  const { email, username, password } = snapshot(state.data)
 
-  const response = fetch("/api/auth/signup", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(snap),
+  const promise = axios.post("/api/users/create", {
+    credentials: { create: { username, password } },
+    email,
   })
 
-  const [res, err] = await until(response)
-  console.log(err || (await res.json()))
-  if (res.ok) signIn()
+  const [err, data] = await to(promise)
+  console.log(err || data)
+  if (!err) signIn()
 }
 
 function SignIn() {
@@ -108,7 +108,10 @@ function SignUp() {
 
 function Username() {
   const { username } = useSnapshot(state.data)
-  const update = useCallback((e: Event) => (state.data.username = e.target.value.toLowerCase()), [])
+  const update = useCallback(
+    (e: Event) => (state.data.username = e.target.value.toLowerCase()),
+    []
+  )
   return (
     <Row>
       <Input
@@ -125,13 +128,13 @@ function Email() {
   const { email } = useSnapshot(state.data)
   return (
     <Row>
-    <Input
-      aria-label="email"
-      placeholder="email"
-      type="email"
-      value={email}
-      onChange={update`email`}
-    />
+      <Input
+        aria-label="email"
+        placeholder="email"
+        type="email"
+        value={email}
+        onChange={update`email`}
+      />
     </Row>
   )
 }
@@ -140,13 +143,13 @@ function Password() {
   const { password } = useSnapshot(state.data)
   return (
     <Row>
-    <Input.Password
-      aria-label="password"
-      placeholder="password"
-      type="password"
-      value={password}
-      onChange={update`password`}
-    />
+      <Input.Password
+        aria-label="password"
+        placeholder="password"
+        type="password"
+        value={password}
+        onChange={update`password`}
+      />
     </Row>
   )
 }
