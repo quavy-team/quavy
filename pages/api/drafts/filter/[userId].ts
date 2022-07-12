@@ -9,3 +9,5 @@ const api = async (req, res) => {
   if (!data) res.status(404).send("Not found")
   res.status(200).send(data)
 }
+
+export default api

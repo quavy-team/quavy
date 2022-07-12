@@ -4,7 +4,7 @@ import { NextApiHandler } from "next"
 
 const api: NextApiHandler = async (_req, res) => {
   const prisma = new PrismaClient()
-  const [err, data] = await to(prisma.draft.findMany())
+  const [err, data] = await to(prisma.song.findMany())
   if (err) res.status(500).json(err)
   if (data) res.status(200).json(data)
   res.status(404).send("Not found")

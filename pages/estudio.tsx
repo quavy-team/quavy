@@ -9,10 +9,11 @@ import useSWR from "swr"
 export default function Estudio() {
   // const { data, status } = useSession()
   const { user, loading } = useUser()
-  const { data: docs } = useSWR<Draft[]>(
+  const { data: docs = [] } = useSWR<Draft[]>(
     () => `api/drafts/filter/${user.id}`,
     fetcher
   )
+  console.log(docs)
   // const [docs, $docs] = useState<Draft[]>([])
 
   // useEffect(() => {
@@ -28,7 +29,6 @@ export default function Estudio() {
 
   if (loading) return <Loading />
   if (!user) return <Text h1>No estás logueado</Text>
-  if (!docs) return <Loading />
 
   return (
     <>
