@@ -1,4 +1,4 @@
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 // import GoogleIcon from "public/icons/"
 import {
   Button,
@@ -41,13 +41,11 @@ async function submitName() {
 // const fetcher = (url) => axios.get(url).then(res => res.data)
 
 export default function Cuenta() {
-  // const { data, status } = useSession()
   const { name, submitting, songs } = useSnapshot(state)
   const { user, loading } = useUser()
   // const { songs, error } = useSWR(`/api/songs?userId=${user.id}`, fetcher)
   const nameModal = useModal()
   const verifyModal = useModal()
-  // console.log(data, status)
   console.log(songs)
 
   useEffect(() => {

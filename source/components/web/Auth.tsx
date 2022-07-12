@@ -1,5 +1,5 @@
 import { tag } from "@helpers"
-import { Button, Card, Container, Input, Row, Text } from "@nextui-org/react"
+import { Button, Card, Grid, Input, Text } from "@nextui-org/react"
 import to from "await-to-js"
 import axios from "axios"
 import { signIn as signInWith } from "next-auth/react"
@@ -29,8 +29,8 @@ export default function Auth() {
 }
 
 async function signIn() {
-  const { email, ...data } = snapshot(state.data)
-  signInWith("credentials", { ...data })
+  const { username, password } = snapshot(state.data)
+  signInWith("credentials", { username, password })
 }
 
 async function signUp() {
@@ -43,7 +43,7 @@ async function signUp() {
 
   const [err, data] = await to(promise)
   console.log(err || data)
-  if (!err) signIn()
+  if (!err) signInWith("credentials", { username, password })
 }
 
 function SignIn() {
@@ -53,7 +53,7 @@ function SignIn() {
         <Text h1>Iniciar sesión</Text>
       </Card.Header>
       <Card.Body as="form">
-        <Container fluid gap={1}>
+        <Grid.Container gap={1}>
           <Username />
           <Password />
           <Button flat onClick={signIn}>
@@ -62,7 +62,7 @@ function SignIn() {
           <Button light onPress={() => signInWith("google")}>
             Sign in with Google
           </Button>
-        </Container>
+        </Grid.Container>
       </Card.Body>
       <Card.Footer>
         <Text small>
@@ -82,16 +82,18 @@ function SignIn() {
 function SignUp() {
   return (
     <Card variant="bordered">
-      <Card.Header>
+      {/* <Card.Header> */}
+      {/* </Card.Header> */}
+      <Card.Body>
         <Text h1>Crear cuenta</Text>
-      </Card.Header>
-      <Card.Body as="form">
-        <Username />
-        <Email />
-        <Password />
-        <Button auto flat onClick={signUp}>
-          Sign Up
-        </Button>
+        <Grid.Container as="form" gap={1}>
+          <Username />
+          <Email />
+          <Password />
+          <Button auto flat onClick={signUp}>
+            Sign Up
+          </Button>
+        </Grid.Container>
       </Card.Body>
     </Card>
   )
@@ -104,21 +106,21 @@ function Username() {
     []
   )
   return (
-    <Row>
+    <Grid>
       <Input
         aria-label="username"
         placeholder="username"
         value={username}
         onChange={update}
       />
-    </Row>
+    </Grid>
   )
 }
 
 function Email() {
   const { email } = useSnapshot(state.data)
   return (
-    <Row>
+    <Grid>
       <Input
         aria-label="email"
         placeholder="email"
@@ -126,14 +128,14 @@ function Email() {
         value={email}
         onChange={update`email`}
       />
-    </Row>
+    </Grid>
   )
 }
 
 function Password() {
   const { password } = useSnapshot(state.data)
   return (
-    <Row>
+    <Grid>
       <Input.Password
         aria-label="password"
         placeholder="password"
@@ -141,6 +143,6 @@ function Password() {
         value={password}
         onChange={update`password`}
       />
-    </Row>
+    </Grid>
   )
 }
