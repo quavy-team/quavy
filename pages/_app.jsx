@@ -2,7 +2,7 @@ import "@fontsource/manrope/variable.css"
 import "@fontsource/metropolis/700.css"
 import { globalCss, NextUIProvider } from "@nextui-org/react"
 import { SessionProvider } from "next-auth/react"
-import light from "src/themes"
+import light from "@themes"
 
 // const NextUI = dynamic(import("/components/provider"), { ssr: false })
 

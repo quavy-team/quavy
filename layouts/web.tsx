@@ -2,7 +2,7 @@ import {
   Avatar, Button, Modal, styled, Text, Tooltip,
   useModal
 } from "@nextui-org/react"
-import { useUser } from "lib/hooks"
+import { useUser } from "@hooks"
 import NextLink from "next/link"
 import {
   Gear,

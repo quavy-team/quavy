@@ -1,25 +1,27 @@
+import { useUser } from "@hooks"
 import { Loading, Text } from "@nextui-org/react"
 import { Draft } from "@prisma/client"
 import Web from "layouts/web"
-import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
-
 export default function Estudio() {
-  const { data, status } = useSession()
-  const [docs, setDocs] = useState<Draft[]>([])
+  // const { data, status } = useSession()
+  const { user, loading } = useUser()
+  const [docs, $docs] = useState<Draft[]>([])
 
   useEffect(() => {
-    console.log(data)
-    if (!data) return
-     fetch(`/api/db/drafts?userId=${data.user.id}`).then(res => res.json()).then((docs) => {
-       console.log(docs)
-       
-    })
-  }, [data])
+    console.log(user)
+    if (!user) return
+    fetch(`/api/drafts?userId=${user.id}`)
+      .then((res) => res.json())
+      .then((docs) => {
+        console.log(docs)
+        $docs(docs)
+      })
+  }, [user])
 
-  if (!docs || status == "loading") return <Loading />
+  if (!docs || loading) return <Loading />
 
   return (
     <>

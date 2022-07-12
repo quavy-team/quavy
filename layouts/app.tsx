@@ -1,5 +1,5 @@
 import { Avatar, Button, styled } from "@nextui-org/react"
-import { useVoid } from "lib/hooks"
+import { useVoid } from "@hooks"
 import { useSession } from "next-auth/react"
 import NextLink from "next/link"
 import { HouseSimple, SignIn } from "phosphor-react"

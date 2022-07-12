@@ -15,15 +15,7 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
-    "paths": {
-      // "@components/*": ["source/components/*"],
-      // "@styles/*": ["source/styles/*"],
-      // "@helpers": ["source/helpers"],
-      // "@utils": ["source/utils"],
-      // "@types": ["source/types"],
-      "@*": ["source/*"],
-      "@nextui": ["@nextui-org/react"],
-    }
+    "paths": { "@*": ["source/*"] }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

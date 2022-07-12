@@ -1,4 +1,4 @@
-import { signOut, useSession } from "next-auth/react"
+import { signOut } from "next-auth/react"
 // import GoogleIcon from "public/icons/"
 import {
   Button,
@@ -11,10 +11,14 @@ import {
 } from "@nextui-org/react"
 import type * as Prisma from "@prisma/client"
 // import Auth from "source/components/web/Auth"
-import {Auth} from "@components/web"
+import { Auth } from "@components/web"
+import { useUser } from "@hooks"
 import Web from "layouts/web"
-import { useVoid } from "lib/hooks"
+import { useEffect } from "react"
 import { proxy, snapshot, useSnapshot } from "valtio"
+import axios from "axios"
+import { pluck } from "@helpers"
+import useSWR from "swr"
 
 const state = proxy({
   name: "",
@@ -37,67 +41,73 @@ async function submitName() {
   console.log(user)
 }
 
+// const fetcher = (url) => axios.get(url).then(res => res.data)
+
 export default function Cuenta() {
-  const { data, status } = useSession()
+  // const { data, status } = useSession()
   const { name, submitting, songs } = useSnapshot(state)
+  const { user, loading } = useUser()
+  // const { songs, error } = useSWR(`/api/songs?userId=${user.id}`, fetcher)
   const nameModal = useModal()
   const verifyModal = useModal()
-  console.log(data, status)
+  // console.log(data, status)
   console.log(songs)
 
-  useVoid(async () => {
-    if (!data) return
-    const res = await fetch("/api/songs")
-    state.songs = await res.json()
-  })
+  useEffect(() => {
+    if (!user) return
+    fetch(`/api/songs?userId=${user.id}`)
+      .then((res) => res.json())
+      .then((songs) => {
+        console.log(songs)
+        state.songs = songs
+      })
+  }, [user])
 
-  switch (status) {
-    case "loading":
-      return <Loading />
-    case "unauthenticated":
-      return <Auth />
-    default:
-      return (
-        <Card css={{mx: "auto"}}>
-          <Card.Header>
-          <Text h1>Hola {data.user.name}</Text>
-          </Card.Header>
-          <Card.Body>
-          <pre>{JSON.stringify(data, null, 2)}</pre>
-          <Button auto color="error" onPress={() => signOut()}>
-            Sign out
-          </Button>
+  // useVoid(async () => {
+  //   if (!data) return
+  //   const res = await fetch("/api/songs")
+  //   state.songs = await res.json()
+  // })
 
-          <Button auto onPress={() => nameModal.setVisible(true)}>
-            Cambiar Nombre
-          </Button>
+  if (loading) return <Loading />
+  if (!user) return <Auth />
 
-          <Button auto onPress={() => verifyModal.setVisible(true)}>
-            Verificar email
-          </Button>
-          </Card.Body>
+  return (
+    <Card css={{ mx: "auto" }}>
+      <Card.Header>
+        <Text h1>Hola {user.name}</Text>
+      </Card.Header>
+      <Card.Body>
+        <pre>{JSON.stringify(user, null, 2)}</pre>
+        <Button auto color="error" onPress={() => signOut()}>
+          Sign out
+        </Button>
 
-          <Modal {...nameModal.bindings}>
-            <h4>Cambiar nombre</h4>
-            <Input
-              labelPlaceholder="nombre"
-              value={name}
-              onChange={updateName}
-            />
-            <Button onPress={submitName}>
-              {submitting ? <Loading /> : "Cambiar nombre"}
-            </Button>
-          </Modal>
+        <Button auto onPress={() => nameModal.setVisible(true)}>
+          Cambiar Nombre
+        </Button>
 
-          <Modal {...verifyModal.bindings}>
-            <h4>Verificar email</h4>
-            <h5>Elegir un proveedor</h5>
+        <Button auto onPress={() => verifyModal.setVisible(true)}>
+          Verificar email
+        </Button>
+      </Card.Body>
 
-            {submitting ? <Loading /> : "Linkear cuenta"}
-          </Modal>
-        </Card>
-      )
-  }
+      <Modal {...nameModal.bindings}>
+        <h4>Cambiar nombre</h4>
+        <Input labelPlaceholder="nombre" value={name} onChange={updateName} />
+        <Button onPress={submitName}>
+          {submitting ? <Loading /> : "Cambiar nombre"}
+        </Button>
+      </Modal>
+
+      <Modal {...verifyModal.bindings}>
+        <h4>Verificar email</h4>
+        <h5>Elegir un proveedor</h5>
+
+        {submitting ? <Loading /> : "Linkear cuenta"}
+      </Modal>
+    </Card>
+  )
 }
 
 Cuenta.Layout = Web

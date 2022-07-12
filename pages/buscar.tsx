@@ -1,5 +1,6 @@
+import { pluck } from "@helpers"
 import { Grid, Input, Text } from "@nextui-org/react"
-import { PrismaClient, Profile, Song } from "@prisma/client"
+import prisma, { Profile, Song } from "@prisma"
 import { AnimatePresence, motion } from "framer-motion"
 import Fuse from "fuse.js"
 import Web from "layouts/web"
@@ -26,7 +27,7 @@ export default function Buscar({ songs }: Props) {
   const search = useCallback(
     function (e) {
       const v = e.target.value as string
-      $matches(v ? fuse.search(v).map((x) => x.item) : songs)
+      $matches(v ? fuse.search(v).map(pluck("item")) : songs)
     },
     [songs, fuse]
   )
@@ -78,7 +79,7 @@ export default function Buscar({ songs }: Props) {
 Buscar.Layout = Web
 
 export async function getStaticProps() {
-  const prisma = new PrismaClient()
+  // const prisma = new PrismaClient()
   const options = { include: { authors: true } }
   const songs = await prisma.song.findMany(options)
   return { props: { songs } }
