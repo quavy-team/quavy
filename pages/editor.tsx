@@ -12,13 +12,15 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react"
+import { Draft } from "@prisma/client"
+import to from "await-to-js"
 import axios from "axios"
 import { useRouter } from "next/router"
 import { useCallback } from "react"
 import useSWR from "swr"
 import { proxy, snapshot, useSnapshot } from "valtio"
 
-const state = proxy({
+const state = proxy<Partial<Draft>>({
   title: "",
   authors: [""],
   chords: [],
@@ -29,7 +31,7 @@ const state = proxy({
 //   Object.keys(data).map((key) => (state[key] = data[key]))
 // }
 
-function save(id) {
+function createWith(id) {
   return () => {
     const user = { connect: { id } }
     const data = snapshot(state)
@@ -37,10 +39,19 @@ function save(id) {
   }
 }
 
+function save(id) {
+  return async () => {
+    const data = snapshot(state)
+    const promise = axios.post(`/api/drafts/update/${id}`, data)
+    const [err, res] = await to(promise)
+    console.log(err, res)
+  }
+}
+
 export default function Editor() {
   const { query } = useRouter()
   const { user } = useUser()
-  const { data } = useSWR(query.id && `/api/drafts/${query.id}`, fetcher)
+  const { data } = useSWR<Draft>(query.id && `/api/drafts/${query.id}`, fetcher)
 
   if (data) {
     state.title = data.title
@@ -60,7 +71,9 @@ export default function Editor() {
     <Container fluid>
       <Text h1>Editor de Canciones</Text>
       <Spacer />
-      <Button onPress={save(user.id)}>Guardar</Button>
+      <Button onPress={data ? save(data.id) : createWith(user.id)}>
+        Guardar
+      </Button>
       <Button onPress={() => console.log(snapshot(state))}>Loggear</Button>
       <Spacer />
       <Titulo />

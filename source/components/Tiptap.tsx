@@ -28,8 +28,8 @@ export default function Tiptap({ callback }) {
   const editor = useEditor({
     content: "",
     extensions: [document, text, paragraph, Code, Bold],
-    // onBlur: ({ editor }) => callback(editor.getJSON()),
-    onUpdate: ({editor}) => console.log(editor.getJSON()),
+    onBlur: ({ editor }) => callback(editor.getJSON()),
+    // onUpdate: ({editor}) => console.log(editor.getJSON()),
     onCreate: console.log,
   })
 
