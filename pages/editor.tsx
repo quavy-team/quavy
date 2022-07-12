@@ -1,5 +1,7 @@
 import Tiptap from "@components/Tiptap"
+import { fetcher } from "@helpers"
 import { useUser } from "@hooks"
+import Web from "@layouts/web"
 import {
   Button,
   Col,
@@ -8,12 +10,12 @@ import {
   Loading,
   Row,
   Spacer,
-  Text
+  Text,
 } from "@nextui-org/react"
 import axios from "axios"
-import Web from "@layouts/web"
 import { useRouter } from "next/router"
-import { useCallback, useEffect } from "react"
+import { useCallback } from "react"
+import useSWR from "swr"
 import { proxy, snapshot, useSnapshot } from "valtio"
 
 const state = proxy({
@@ -23,9 +25,9 @@ const state = proxy({
   lyrics: [{ title: "", role: "", strum: [], html: "", json: {} }],
 })
 
-function update({ data }) {
-  Object.keys(data).map((key) => (state[key] = data[key]))
-}
+// function update({ data }) {
+//   Object.keys(data).map((key) => (state[key] = data[key]))
+// }
 
 function save(id) {
   return () => {
@@ -38,11 +40,19 @@ function save(id) {
 export default function Editor() {
   const { query } = useRouter()
   const { user } = useUser()
+  const { data } = useSWR(query.id && `/api/drafts/${query.id}`, fetcher)
 
-  useEffect(() => {
-    if (!query.id) return
-    axios(`/api/drafts/${query.id}`).then(update)
-  }, [query])
+  if (data) {
+    state.title = data.title
+    state.authors = data.authors
+    state.chords = data.chords
+    state.lyrics = data.lyrics
+  }
+
+  // useEffect(() => {
+  //   if (!query.id) return
+  //   axios(`/api/drafts/${query.id}`).then(update)
+  // }, [query])
 
   if (!user) return <Loading />
 

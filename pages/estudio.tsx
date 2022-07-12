@@ -34,7 +34,7 @@ export default function Estudio() {
     <>
       <h1>Estudio</h1>
       <Link href="editor" passHref>
-        <Text blockquote>Nueva Cancion</Text>
+        <Text blockquote css={{cursor: "pointer"}}>Nueva Cancion</Text>
       </Link>
       {docs.map(({ id, title }) => (
         <Link key={id} href={{ pathname: "editor", query: { id } }}>

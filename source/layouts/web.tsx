@@ -1,8 +1,13 @@
-import {
-  Avatar, Button, Modal, styled, Text, Tooltip,
-  useModal
-} from "@nextui-org/react"
 import { useUser } from "@hooks"
+import {
+  Avatar,
+  Button,
+  Modal,
+  styled,
+  Text,
+  Tooltip,
+  useModal,
+} from "@nextui-org/react"
 import NextLink from "next/link"
 import {
   Gear,
@@ -10,7 +15,7 @@ import {
   MagnifyingGlass,
   PenNib,
   SignIn,
-  Sliders
+  Sliders,
 } from "phosphor-react"
 import { useCallback } from "react"
 
