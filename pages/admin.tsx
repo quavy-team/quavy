@@ -1,6 +1,6 @@
 import { Text } from "@nextui-org/react"
 import { Draft, PrismaClient, Song } from "@prisma/client"
-import Web from "layouts/web"
+import Web from "@layouts/web"
 import { useUser } from "@hooks"
 
 interface Props {

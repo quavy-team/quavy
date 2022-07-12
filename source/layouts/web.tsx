@@ -111,7 +111,7 @@ const Nav = styled("nav", {
 
 const Link = ({ to, tooltip, children, ...props }) => (
   <Tooltip content={tooltip} placement="right">
-    <NextLink href={to}>
+    <NextLink href={to} passHref>
       <a {...props}>{children}</a>
     </NextLink>
   </Tooltip>

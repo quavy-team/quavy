@@ -1,27 +1,34 @@
+import { fetcher } from "@helpers"
 import { useUser } from "@hooks"
+import Web from "@layouts/web"
 import { Loading, Text } from "@nextui-org/react"
-import { Draft } from "@prisma/client"
-import Web from "layouts/web"
+import { Draft } from "@prisma"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import useSWR from "swr"
 
 export default function Estudio() {
   // const { data, status } = useSession()
   const { user, loading } = useUser()
-  const [docs, $docs] = useState<Draft[]>([])
+  const { data: docs } = useSWR<Draft[]>(
+    () => `api/drafts/filter/${user.id}`,
+    fetcher
+  )
+  // const [docs, $docs] = useState<Draft[]>([])
 
-  useEffect(() => {
-    console.log(user)
-    if (!user) return
-    fetch(`/api/drafts?userId=${user.id}`)
-      .then((res) => res.json())
-      .then((docs) => {
-        console.log(docs)
-        $docs(docs)
-      })
-  }, [user])
+  // useEffect(() => {
+  //   console.log(user)
+  //   if (!user) return
+  //   fetch(`/api/drafts?userId=${user.id}`)
+  //     .then((res) => res.json())
+  //     .then((docs) => {
+  //       console.log(docs)
+  //       $docs(docs)
+  //     })
+  // }, [user])
 
-  if (!docs || loading) return <Loading />
+  if (loading) return <Loading />
+  if (!user) return <Text h1>No estás logueado</Text>
+  if (!docs) return <Loading />
 
   return (
     <>

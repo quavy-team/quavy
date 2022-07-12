@@ -7,18 +7,15 @@ import {
   Loading,
   Modal,
   Text,
-  useModal,
+  useModal
 } from "@nextui-org/react"
 import type * as Prisma from "@prisma/client"
 // import Auth from "source/components/web/Auth"
-import { Auth } from "@components/web"
+import { Auth as Authenticate } from "@components/web"
 import { useUser } from "@hooks"
-import Web from "layouts/web"
+import Web from "@layouts/web"
 import { useEffect } from "react"
 import { proxy, snapshot, useSnapshot } from "valtio"
-import axios from "axios"
-import { pluck } from "@helpers"
-import useSWR from "swr"
 
 const state = proxy({
   name: "",
@@ -70,7 +67,7 @@ export default function Cuenta() {
   // })
 
   if (loading) return <Loading />
-  if (!user) return <Auth />
+  if (!user) return <Authenticate />
 
   return (
     <Card css={{ mx: "auto" }}>

@@ -3,7 +3,7 @@ import { Grid, Input, Text } from "@nextui-org/react"
 import prisma, { Profile, Song } from "@prisma"
 import { AnimatePresence, motion } from "framer-motion"
 import Fuse from "fuse.js"
-import Web from "layouts/web"
+import Web from "@layouts/web"
 import Link from "next/link"
 import { useCallback, useMemo, useState } from "react"
 

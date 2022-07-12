@@ -11,7 +11,7 @@ import {
   Text
 } from "@nextui-org/react"
 import axios from "axios"
-import Web from "layouts/web"
+import Web from "@layouts/web"
 import { useRouter } from "next/router"
 import { useCallback, useEffect } from "react"
 import { proxy, snapshot, useSnapshot } from "valtio"

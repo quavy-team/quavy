@@ -1,6 +1,6 @@
 import { Text } from "@nextui-org/react"
 // import Web from "components/web/Layout"
-import Web from "layouts/web"
+import Web from "@layouts/web"
 import Head from "next/head"
 // import
 

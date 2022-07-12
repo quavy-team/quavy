@@ -12,27 +12,6 @@ const flow = (min: number, max = min * PHI) => {
   return `clamp(${xs}, ${vw} + ${px}, ${xl})`
 }
 
-// const colors = {
-//   blue: {
-//     "50": "#ecf4ff",
-//     "100": "#ddebff",
-//     "200": "#c2d9ff",
-//     "300": "#9dbfff",
-//     "400": "#769aff",
-//     "500": "#5575fe",
-//     "600": "#374cf4",
-//     "700": "#2b3bd7",
-//     "800": "#2533ae",
-//     "900": "#263389",
-//   },
-// }
-
-// Object.entries(colors).flatMap(([name, val]) => {
-//   return Object.entries(val).map(([key, hex]) => {
-//     return { [name + key]: hex }
-//   })
-// })
-
 const theme: Theme["theme"] = {
   colors: {
     // brand

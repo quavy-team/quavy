@@ -1,19 +1,10 @@
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Input,
-  Row,
-  Text,
-} from "@nextui-org/react"
 import { tag } from "@helpers"
+import { Button, Card, Container, Input, Row, Text } from "@nextui-org/react"
+import to from "await-to-js"
+import axios from "axios"
 import { signIn as signInWith } from "next-auth/react"
 import { useCallback } from "react"
 import { proxy, snapshot, useSnapshot } from "valtio"
-import until from "zuwarten"
-import axios from "axios"
-import to from "await-to-js"
 
 interface Event {
   target: { value: string }
@@ -62,7 +53,7 @@ function SignIn() {
         <Text h1>Iniciar sesión</Text>
       </Card.Header>
       <Card.Body as="form">
-        <Container fluid>
+        <Container fluid gap={1}>
           <Username />
           <Password />
           <Button flat onClick={signIn}>

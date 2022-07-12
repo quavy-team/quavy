@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client"
-import Web from "layouts/web"
+import Web from "@layouts/web"
 
 export default function Perfil({ profile }) {
   return (
