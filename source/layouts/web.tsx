@@ -3,11 +3,11 @@ import {
   Avatar,
   Button,
   Modal,
-  styled,
   Text,
-  Tooltip,
   useModal,
+  Tooltip,
 } from "@nextui-org/react"
+import { Main, Nav } from "@styles"
 import NextLink from "next/link"
 import {
   Gear,
@@ -16,11 +16,12 @@ import {
   PenNib,
   SignIn,
   Sliders,
+  
 } from "phosphor-react"
 import { useCallback } from "react"
 
 export default function Web({ children }) {
-  const { user } = useUser()
+  const { user, loading } = useUser()
   const menu = useModal()
   const toggle = useCallback(() => menu.setVisible(!menu.visible), [menu])
   return (
@@ -57,81 +58,17 @@ export default function Web({ children }) {
       <Main>{children}</Main>
       <Modal blur {...menu.bindings}>
         <Text h4>Configuracion</Text>
-        {!!user || <Button>Iniciar Sesion</Button>}
+        {!loading && !user && <Button>Iniciar Sesion</Button>}
         <Button></Button>
       </Modal>
     </>
   )
 }
 
-const Nav = styled("nav", {
-  position: "fixed",
-  zIndex: 1,
-  top: 0,
-  bottom: 0,
-  left: 0,
-
-  width: 60,
-
-  d: "flex",
-  fd: "column",
-  ai: "center",
-
-  color: "black",
-  bg: "white",
-
-  div: { size: 60, p: 12 },
-  a: { size: 36, br: 6, dflex: "center", color: "inherit" },
-  "a:hover": { bg: "$link" },
-  "div:first-child": { mb: "auto" },
-  "div:last-child": { mt: "auto" },
-
-  "&::before": {
-    content: "",
-    position: "absolute",
-    zIndex: -1,
-    top: 0,
-    bottom: 0,
-    right: 0,
-
-    width: 10,
-
-    linearGradient: "$rainbow",
-    filter: "blur(1rem)",
-  },
-
-  "&::after": {
-    content: "",
-    position: "absolute",
-    zIndex: -1,
-    top: 0,
-    bottom: 0,
-    right: 0,
-
-    width: 60,
-
-    bg: "white",
-  },
-})
-
 const Link = ({ to, tooltip, children, ...props }) => (
-  <Tooltip content={tooltip} placement="right">
-    <NextLink href={to} passHref>
-      <a {...props}>{children}</a>
-    </NextLink>
-  </Tooltip>
+  <Tooltip content={tooltip} placement="right" trigger="hover">
+  <NextLink href={to} passHref>
+    <a {...props}>{children}</a>
+  </NextLink>
+   </Tooltip>
 )
-
-const Main = styled("main", {
-  position: "fixed",
-  oy: "auto",
-  top: 0,
-  bottom: 0,
-  left: 60,
-  right: 60,
-
-  // bg: "#f5faff",
-
-  p: "4rem",
-  "scrollbar-width": "none",
-})

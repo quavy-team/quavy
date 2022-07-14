@@ -4,7 +4,12 @@ import code from "@tiptap/extension-code"
 import document from "@tiptap/extension-document"
 import paragraph from "@tiptap/extension-paragraph"
 import text from "@tiptap/extension-text"
-import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react"
+import {
+  BubbleMenu,
+  EditorContent,
+  EditorOptions,
+  useEditor,
+} from "@tiptap/react"
 
 const Code = code.extend({
   excludes: "code",
@@ -19,18 +24,26 @@ const Bold = bold.extend({
 })
 
 const Content = styled(EditorContent, {
-  "code:nth-child(3n+1)": {},
-  "code:nth-child(3n+2)": {},
-  "code:nth-child(3n+3)": {},
+  outline: "none",
+  "& p": { margin: 0 },
+  "code:nth-child(3n+1)": {
+    color: "$primary",
+    bg: "$primaryLight",
+  },
+  "code:nth-child(3n+2)": {
+    color: "$success",
+    bg: "$successLight",
+  },
+  "code:nth-child(3n+3)": {
+    color: "$error",
+    bg: "$errorLight",
+  },
 })
 
-export default function Tiptap({ callback }) {
+export default function Tiptap(props: Partial<EditorOptions>) {
   const editor = useEditor({
-    content: "",
+    ...props,
     extensions: [document, text, paragraph, Code, Bold],
-    onBlur: ({ editor }) => callback(editor.getJSON()),
-    // onUpdate: ({editor}) => console.log(editor.getJSON()),
-    onCreate: console.log,
   })
 
   return (

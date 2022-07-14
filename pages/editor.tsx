@@ -12,7 +12,6 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react"
-import { Draft } from "@prisma/client"
 import to from "await-to-js"
 import axios from "axios"
 import { useRouter } from "next/router"
@@ -20,16 +19,12 @@ import { useCallback } from "react"
 import useSWR from "swr"
 import { proxy, snapshot, useSnapshot } from "valtio"
 
-const state = proxy<Partial<Draft>>({
+const state = proxy({
   title: "",
   authors: [""],
   chords: [],
-  lyrics: [{ title: "", role: "", strum: [], html: "", json: {} }],
+  lyrics: [{ title: "", role: "", strum: {}, json: {} }],
 })
-
-// function update({ data }) {
-//   Object.keys(data).map((key) => (state[key] = data[key]))
-// }
 
 function createWith(id) {
   return () => {
@@ -48,10 +43,12 @@ function save(id) {
   }
 }
 
+type Data = typeof state & { id: string }
+
 export default function Editor() {
   const { query } = useRouter()
   const { user } = useUser()
-  const { data } = useSWR<Draft>(query.id && `/api/drafts/${query.id}`, fetcher)
+  const { data } = useSWR<Data>(query.id && `/api/drafts/${query.id}`, fetcher)
 
   if (data) {
     state.title = data.title
@@ -170,7 +167,13 @@ function Letras() {
           </Row>
           <Row gap={1}>
             <Col>
-              <Tiptap callback={(json) => (state.lyrics[i].json = json)} />
+              <Tiptap
+                content={block.json}
+                // callback={(json) => (state.lyrics[i].json = json)}
+                onBlur={({ editor }) => {
+                  state.lyrics[i].json = editor.getJSON()
+                }}
+              />
             </Col>
           </Row>
         </Container>

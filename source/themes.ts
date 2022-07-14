@@ -15,10 +15,10 @@ const flow = (min: number, max = min * PHI) => {
 const theme: Theme["theme"] = {
   colors: {
     // brand
-    primary: "#FEDE55",
+    primary: "#5575FE",
     secondary: "#FF9E61",
-    accent: "#5575FE",
-    gradient: "to right, $primary, $secondary",
+    accent: "#FEDE55",
+    gradient: "to right, $secondary, $accent",
     // semantic
     success: "#55FE89",
     warning: "#FE8955",
@@ -28,7 +28,7 @@ const theme: Theme["theme"] = {
     selection: "#FEDE55",
     code: "#FE55CA",
     // others
-    rainbow: `hsl(217deg 100% 69%) 0%,
+    rainbow: String.raw`hsl(217deg 100% 69%) 0%,
               hsl(232deg 100% 69%) 19%,
               hsl(247deg 100% 69%) 27%,
               hsl(262deg 100% 69%) 34%,
