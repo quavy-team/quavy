@@ -17,6 +17,6 @@
     "baseUrl": ".",
     "paths": { "@*": ["source/*"] }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "source/colors.ts"],
   "exclude": ["node_modules"]
 }

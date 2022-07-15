@@ -44,7 +44,7 @@ export default function Tiptap(props: Partial<EditorOptions>) {
   const editor = useEditor({
     ...props,
     extensions: [document, text, paragraph, Code, Bold],
-  })
+  }, [props])
 
   return (
     <>

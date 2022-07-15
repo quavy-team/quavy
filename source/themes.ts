@@ -1,3 +1,4 @@
+import colors from "@colors"
 import { createTheme, Theme } from "@nextui-org/react"
 
 const PHI = (1 + Math.sqrt(5)) / 2
@@ -5,6 +6,8 @@ const PHI = (1 + Math.sqrt(5)) / 2
 const flow = (min: number, max = min * PHI) => {
   let x = (max - min) / (1920 - 375)
   let y = max - 1920 * x
+  // let v = (x * 1000).toFixed(2)
+  // let p = y.toFixed(2)
   let vw = Math.round(1000 * x) / 10 + "vw"
   let px = Math.round(y) + "px"
   let xs = Math.round(320 * x + y) + "px"
@@ -12,21 +15,23 @@ const flow = (min: number, max = min * PHI) => {
   return `clamp(${xs}, ${vw} + ${px}, ${xl})`
 }
 
+
 const theme: Theme["theme"] = {
   colors: {
+    ...colors,
     // brand
-    primary: "#5575FE",
-    secondary: "#FF9E61",
-    accent: "#FEDE55",
-    gradient: "to right, $secondary, $accent",
-    // semantic
-    success: "#55FE89",
-    warning: "#FE8955",
-    error: "#FE5575",
-    // highlights
-    link: "#619EFF",
-    selection: "#FEDE55",
-    code: "#FE55CA",
+    // primary: "#5575FE",
+    // secondary: "#FF9E61",
+    // accent: "#FEDE55",
+    // gradient: "to right, $secondary, $accent",
+    // // semantic
+    // success: "#55FE89",
+    // warning: "#FE8955",
+    // error: "#FE5575",
+    // // highlights
+    // link: "$cyan600",
+    // selection: "#blue200",
+    // code: "#FE55CA",
     // others
     rainbow: String.raw`hsl(217deg 100% 69%) 0%,
               hsl(232deg 100% 69%) 19%,
@@ -39,7 +44,7 @@ const theme: Theme["theme"] = {
               hsl(338deg 100% 69%) 66%,
               hsl(353deg 100% 69%) 73%,
               hsl(8deg 100% 69%) 81%,
-              hsl(23deg 100% 69%) 100%`
+              hsl(23deg 100% 69%) 100%`,
   },
   fonts: {
     sans: "ManropeVariable",
@@ -56,23 +61,28 @@ const theme: Theme["theme"] = {
   },
 }
 
-const light = createTheme({ type: "light", theme: {
-  ...theme,
-  colors: {
-    ...theme.colors,
-    background: "#FFFFFF",
-    foreground: "#F5FAFF"
-  }
-} })
+const light = createTheme({
+  type: "light",
+  theme: {
+    ...theme,
+    colors: {
+      ...theme.colors,
+      background: "#FFFFFF",
+      foreground: "#F5FAFF",
+    },
+  },
+})
 
-const dark = createTheme({ type: "dark", theme: {
-  ...theme,
-  colors: {
-    ...theme.colors,
-    // add colors
-  }
-} })
-
+const dark = createTheme({
+  type: "dark",
+  theme: {
+    ...theme,
+    colors: {
+      ...theme.colors,
+      // add colors
+    },
+  },
+})
 
 const themes = {
   light: light.className,

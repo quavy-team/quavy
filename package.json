@@ -31,6 +31,7 @@
     "@tiptap/react": "^2.0.0-beta.109",
     "await-to-js": "^3.0.0",
     "axios": "^0.27.2",
+    "color": "^4.2.3",
     "framer-motion": "^6.3.3",
     "fuse.js": "^6.6.2",
     "next": "latest",
@@ -50,6 +51,7 @@
     "zuwarten": "^2.0.0"
   },
   "devDependencies": {
+    "@types/color": "^3.0.3",
     "@types/node": "^17.0.42",
     "@types/react": "^18.0.9",
     "@types/slug": "^5.0.3",

@@ -10,7 +10,7 @@ import {
   Loading,
   Row,
   Spacer,
-  Text,
+  Text
 } from "@nextui-org/react"
 import to from "await-to-js"
 import axios from "axios"
@@ -46,9 +46,9 @@ function save(id) {
 type Data = typeof state & { id: string }
 
 export default function Editor() {
-  const { query } = useRouter()
-  const { user } = useUser()
-  const { data } = useSWR<Data>(query.id && `/api/drafts/${query.id}`, fetcher)
+  const { query: q } = useRouter()
+  const { user, loading } = useUser()
+  const { data } = useSWR<Data>(q.id && `/api/drafts/${q.id}`, fetcher)
 
   if (data) {
     state.title = data.title
@@ -62,7 +62,8 @@ export default function Editor() {
   //   axios(`/api/drafts/${query.id}`).then(update)
   // }, [query])
 
-  if (!user) return <Loading />
+  if (loading) return <Loading />
+  if (!user) return <Text>You must be logged in to edit a draft.</Text>
 
   return (
     <Container fluid>
@@ -110,7 +111,9 @@ function Autores() {
         <>
           <Input
             // key={`autor-${key}`}
-            placeholder={!key ? "autor principal" : key == 1 ? "&" : "ft."}
+            labelPlaceholder={!key && "autor principal"}
+            // placeholder={!key ? "autor principal" : key == 1 ? "&" : "ft."}
+            labelLeft={key ? (key == 1 ? "&" : "ft.") : null}
             aria-label="autor"
             value={author}
             onChange={update(key)}
@@ -145,7 +148,7 @@ function Letras() {
     <>
       {lyrics.map((block, i) => (
         <Container fluid key={`bloque-${i}`} gap={0}>
-          <Row gap={1}>
+          <Row>
             <Col>
               <Input
                 placeholder="titulo"
@@ -165,8 +168,8 @@ function Letras() {
               />
             </Col>
           </Row>
-          <Row gap={1}>
-            <Col>
+          {/* <Row> */}
+            {/* <Col> */}
               <Tiptap
                 content={block.json}
                 // callback={(json) => (state.lyrics[i].json = json)}
@@ -174,8 +177,8 @@ function Letras() {
                   state.lyrics[i].json = editor.getJSON()
                 }}
               />
-            </Col>
-          </Row>
+            {/* </Col> */}
+          {/* </Row> */}
         </Container>
       ))}
       <Button onPress={() => ++state.lyrics.length}>Nuevo Bloque</Button>
