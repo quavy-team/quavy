@@ -37,28 +37,17 @@ let a = {
 }
 
 const baseColors = Object.entries(palette).reduce((base, [key, value]) => {
-  let s = [1, 4, 9, 16, 25, 36, 49, 64, 81]
-  let z = [99, 96, 91, 84, 75, 64, 51, 36, 19]
-  // 6*6+8*8=5*5*4
-  // const colors = shades.map((shade, i) => ({
-  //   [key + shade]: Color(value)
-  //     .lightness(key > 600 ? )
-  //     .hex()
-  //     .toString(),
-  // }))
-
-  // return { ...base, ...colors.reduce((x, y) => ({ ...x, ...y }), {}) }
   return {
-    [key + 50]: Color(value).lightness(96).toString(),
-    [key + 100]: Color(value).lightness(91).toString(),
-    [key + 200]: Color(value).lightness(86).toString(),
-    [key + 300]: Color(value).lightness(81).toString(),
-    [key + 400]: Color(value).lightness(76).toString(),
-    [key + 500]: Color(value).lightness(71).toString(),
-    [key + 600]: Color(value).lightness(66).toString(),
-    [key + 700]: Color(value).lightness(46).toString(),
-    [key + 800]: Color(value).lightness(26).toString(),
-    [key + 900]: Color(value).lightness(6).toString(),
+    [key + 50]: Color(value).lightness(96).toString(), // bg
+    [key + 100]: Color(value).lightness(91).toString(), // bg on hover
+    [key + 200]: Color(value).lightness(86).toString(), // active bg
+    [key + 300]: Color(value).lightness(81).toString(), // border
+    [key + 400]: Color(value).lightness(76).toString(), // outline
+    [key + 500]: Color(value).lightness(71).toString(), // border on hover
+    [key + 600]: Color(value).lightness(66).toString(), // solid bg
+    [key + 700]: Color(value).lightness(56).toString(), // solig bg on hover
+    [key + 800]: Color(value).lightness(36).toString(), // low contrast text
+    [key + 900]: Color(value).lightness(16).toString(), // high contrast text
   }
 }, {})
 
