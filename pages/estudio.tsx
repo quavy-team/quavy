@@ -1,9 +1,9 @@
 import { fetcher } from "@helpers"
 import { useUser } from "@hooks"
 import Web from "@layouts/web"
-import { Loading, Text } from "@nextui-org/react"
+import { Button, Grid, Loading, Text, Link, Dropdown } from "@nextui-org/react"
 import { Draft } from "@prisma"
-import Link from "next/link"
+import NextLink from "next/link"
 import useSWR from "swr"
 
 export default function Estudio() {
@@ -14,33 +14,38 @@ export default function Estudio() {
     fetcher
   )
   console.log(docs)
-  // const [docs, $docs] = useState<Draft[]>([])
-
-  // useEffect(() => {
-  //   console.log(user)
-  //   if (!user) return
-  //   fetch(`/api/drafts?userId=${user.id}`)
-  //     .then((res) => res.json())
-  //     .then((docs) => {
-  //       console.log(docs)
-  //       $docs(docs)
-  //     })
-  // }, [user])
 
   if (loading) return <Loading />
   if (!user) return <Text h1>No estás logueado</Text>
 
   return (
     <>
-      <h1>Estudio</h1>
-      <Link href="editor" passHref>
-        <Text blockquote css={{cursor: "pointer"}}>Nueva Cancion</Text>
-      </Link>
-      {docs.map(({ id, title }) => (
-        <Link key={id} href={{ pathname: "editor", query: { id } }}>
-          {title}
-        </Link>
-      ))}
+      <Text h1>Estudio</Text>
+      <NextLink href="editor" passHref>
+        <Button color="success" shadow>
+          Nueva Cancion
+        </Button>
+      </NextLink>
+      <Dropdown>
+        <Dropdown.Button flat>Sortear</Dropdown.Button>
+        <Dropdown.Menu aria-label="Static Actions" selectionMode="single">
+          <Dropdown.Item key="new">Alfabeticamente</Dropdown.Item>
+          <Dropdown.Item key="copy">Ultimo guardado</Dropdown.Item>
+          <Dropdown.Item key="edit">Ultimo creado</Dropdown.Item>
+          {/* <Dropdown.Item key="delete" color="error">
+            Delete file
+          </Dropdown.Item> */}
+        </Dropdown.Menu>
+      </Dropdown>
+      <Grid.Container gap={1}>
+        {docs.map(({ id, title }) => (
+          <Grid key={id}>
+            <NextLink key={id} href={{ pathname: "editor", query: { id } }}>
+              <Link block>{title}</Link>
+            </NextLink>
+          </Grid>
+        ))}
+      </Grid.Container>
     </>
   )
 }

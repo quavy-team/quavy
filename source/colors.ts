@@ -21,23 +21,9 @@ const theme = {
   error: "red",
 }
 
-const shades = [900, 800, 700, 600, 500, 400, 300, 200, 100, 50]
-
-let a = {
-  50: 96,
-  100: 91,
-  200: 86,
-  300: 81,
-  400: 76,
-  500: 71,
-  600: 66,
-  700: 48,
-  800: 32,
-  900: 16,
-}
-
-const baseColors = Object.entries(palette).reduce((base, [key, value]) => {
+const baseColors = Object.entries(palette).reduce((colors, [key, value]) => {
   return {
+    ...colors,
     [key + 50]: Color(value).lightness(96).toString(), // bg
     [key + 100]: Color(value).lightness(91).toString(), // bg on hover
     [key + 200]: Color(value).lightness(86).toString(), // active bg
@@ -52,17 +38,19 @@ const baseColors = Object.entries(palette).reduce((base, [key, value]) => {
 }, {})
 
 export default Object.entries(theme).reduce((previous, [key, value]) => {
+  const solid = baseColors[value + 600]
+  const contrast = Color(solid).isDark() ? "$white" : "$black"
   return {
     ...previous,
     [key]: `$${value}600`,
-    [key + "Light"]: `$${value}200`,
-    [key + "LightHover"]: `$${value}300`,
-    [key + "LightActive"]: `$${value}400`,
+    [key + "Light"]: `$${value}50`,
+    [key + "LightHover"]: `$${value}100`,
+    [key + "LightActive"]: `$${value}200`,
     [key + "LightContrast"]: `$${value}600`,
     [key + "Shadow"]: `$${value}500`,
     [key + "Border"]: `$${value}500`,
     [key + "BorderHover"]: `$${value}600`,
     [key + "SolidHover"]: `$${value}700`,
-    [key + "SolidContrast"]: `$white`,
+    [key + "SolidContrast"]: contrast,
   }
 }, baseColors)

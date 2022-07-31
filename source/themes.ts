@@ -6,8 +6,6 @@ const PHI = (1 + Math.sqrt(5)) / 2
 const flow = (min: number, max = min * PHI) => {
   let x = (max - min) / (1920 - 375)
   let y = max - 1920 * x
-  // let v = (x * 1000).toFixed(2)
-  // let p = y.toFixed(2)
   let vw = Math.round(1000 * x) / 10 + "vw"
   let px = Math.round(y) + "px"
   let xs = Math.round(320 * x + y) + "px"
@@ -59,6 +57,14 @@ const theme: Theme["theme"] = {
     // lg: flow(36),
     // xl: flow(48),
   },
+  radii: {
+    xs: "9px",
+    sm: "12px",
+    md: "14px",
+    base: "18px",
+    lg: "18px",
+    xl: "22px",
+  }
 }
 
 const light = createTheme({
@@ -67,8 +73,8 @@ const light = createTheme({
     ...theme,
     colors: {
       ...theme.colors,
-      background: "#FFFFFF",
-      foreground: "#F5FAFF",
+      // background: "#FFFFFF",
+      // foreground: "#F5FAFF",
     },
   },
 })

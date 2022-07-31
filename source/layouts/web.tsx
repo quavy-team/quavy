@@ -2,10 +2,12 @@ import { useUser } from "@hooks"
 import {
   Avatar,
   Button,
+  Card,
   Modal,
   Text,
-  useModal,
   Tooltip,
+  useModal,
+  Link as UiLink
 } from "@nextui-org/react"
 import { Main, Nav } from "@styles"
 import NextLink from "next/link"
@@ -16,10 +18,8 @@ import {
   PenNib,
   SignIn,
   Sliders,
-  
 } from "phosphor-react"
 import { useCallback } from "react"
-
 export default function Web({ children }) {
   const { user, loading } = useUser()
   const menu = useModal()
@@ -27,22 +27,22 @@ export default function Web({ children }) {
   return (
     <>
       <Nav>
-        <Link to="#" tooltip="Configuración" onClick={toggle}>
+        <Link to="#" tip="Configuración" onClick={toggle}>
           <Gear size={24} />
         </Link>
-        <Link to="/" tooltip="Home">
+        <Link to="/" tip="Home">
           <House size={24} />
         </Link>
-        <Link to="/buscar/" tooltip="Buscar">
+        <Link to="/buscar/" tip="Buscar">
           <MagnifyingGlass size={24} />
         </Link>
-        <Link to="/estudio/" tooltip="Estudio">
+        <Link to="/estudio/" tip="Estudio">
           <PenNib size={24} />
         </Link>
-        <Link to="/acordes/" tooltip="Acordes">
+        <Link to="/acordes/" tip="Acordes">
           <Sliders size={24} />
         </Link>
-        <Link to="/cuenta/" tooltip="Cuenta">
+        <Link to="/cuenta/" tip="Cuenta">
           {user ? (
             <Avatar
               src={user.image}
@@ -57,18 +57,25 @@ export default function Web({ children }) {
       </Nav>
       <Main>{children}</Main>
       <Modal blur {...menu.bindings}>
-        <Text h4>Configuracion</Text>
-        {!loading && !user && <Button>Iniciar Sesion</Button>}
-        <Button></Button>
+        <Card>
+          <Card.Header css={{ jc: "center" }}>
+            <Text h4>Configuracion</Text>
+          </Card.Header>
+          <Card.Body css={{ pt: 0 }}>
+            {!loading && !user && <Button>Iniciar Sesion</Button>}
+            <Button flat>Cambiar tema</Button>
+          </Card.Body>
+        </Card>
       </Modal>
     </>
   )
 }
 
-const Link = ({ to, tooltip, children, ...props }) => (
-  <Tooltip content={tooltip} placement="right" trigger="hover">
-  <NextLink href={to} passHref>
-    <a {...props}>{children}</a>
-  </NextLink>
-   </Tooltip>
+const Link = ({ to, tip, children, ...props }) => (
+  <Tooltip content={tip} placement="right">
+    <NextLink href={to} passHref>
+      {/* <UiLink block {...props}>{children}</UiLink> */}
+      <a {...props}>{children}</a>
+    </NextLink>
+  </Tooltip>
 )

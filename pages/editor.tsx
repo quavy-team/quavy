@@ -6,12 +6,16 @@ import {
   Button,
   Col,
   Container,
+  Dropdown,
   Input,
   Loading,
+  Popover,
   Row,
   Spacer,
-  Text
+  Text,
+  Tooltip,
 } from "@nextui-org/react"
+import { JSONContent } from "@tiptap/react"
 import to from "await-to-js"
 import axios from "axios"
 import { useRouter } from "next/router"
@@ -19,36 +23,69 @@ import { useCallback } from "react"
 import useSWR from "swr"
 import { proxy, snapshot, useSnapshot } from "valtio"
 
+const section = {
+  title: "",
+  role: "",
+  strum: {},
+  json: {} as JSONContent,
+}
+
 const state = proxy({
   title: "",
   authors: [""],
   chords: [],
-  lyrics: [{ title: "", role: "", strum: {}, json: {} }],
+  lyrics: [section],
 })
-
-function createWith(id) {
-  return () => {
-    const user = { connect: { id } }
-    const data = snapshot(state)
-    axios.post(`/api/drafts/create`, { user, ...data })
-  }
-}
-
-function save(id) {
-  return async () => {
-    const data = snapshot(state)
-    const promise = axios.post(`/api/drafts/update/${id}`, data)
-    const [err, res] = await to(promise)
-    console.log(err, res)
-  }
-}
 
 type Data = typeof state & { id: string }
 
 export default function Editor() {
-  const { query: q } = useRouter()
+  const router = useRouter()
+  const { id } = router.query
   const { user, loading } = useUser()
-  const { data } = useSWR<Data>(q.id && `/api/drafts/${q.id}`, fetcher)
+  const { data } = useSWR<Data>(id && `/api/drafts/${id}`, fetcher)
+
+  const save = useCallback(async () => {
+    const promise = axios.post(`/api/drafts/update/${id}`, {
+      user: { connect: { id: user.id } },
+      ...snapshot(state),
+    })
+    const [err, res] = await to(promise)
+    console.log(err, res)
+  }, [id, user])
+
+  const create = useCallback(async () => {
+    const promise = axios.post("/api/drafts/create", {
+      user: { connect: { id: user.id } },
+      ...snapshot(state),
+    })
+    const [err, res] = await to(promise)
+    if (res) router.replace(res.data.id)
+    console.log(err, res)
+  }, [router, user])
+
+  const del = useCallback(async () => {
+    const promise = axios.get(`/api/drafts/delete/${id}`)
+    const [err, res] = await to(promise)
+    console.log(err, res)
+  }, [id])
+
+  const copy = useCallback(async () => {
+    const promise = navigator.clipboard.writeText(router.asPath)
+    const [err, res] = await to(promise)
+    if (err) alert("Error")
+    else alert("Copiado")
+    console.log(res, err)
+  }, [router])
+
+  const handleDropdown = useCallback(
+    function (key) {
+      if (key == "save") id ? save() : create()
+      if (key == "copy") copy()
+      if (key == "delete") del()
+    },
+    [id, save, create, copy, del]
+  )
 
   if (data) {
     state.title = data.title
@@ -57,11 +94,6 @@ export default function Editor() {
     state.lyrics = data.lyrics
   }
 
-  // useEffect(() => {
-  //   if (!query.id) return
-  //   axios(`/api/drafts/${query.id}`).then(update)
-  // }, [query])
-
   if (loading) return <Loading />
   if (!user) return <Text>You must be logged in to edit a draft.</Text>
 
@@ -69,15 +101,22 @@ export default function Editor() {
     <Container fluid>
       <Text h1>Editor de Canciones</Text>
       <Spacer />
-      <Button onPress={data ? save(data.id) : createWith(user.id)}>
-        Guardar
-      </Button>
-      <Button onPress={() => console.log(snapshot(state))}>Loggear</Button>
-      <Spacer />
+      <Dropdown>
+        <Dropdown.Button flat>Opciones</Dropdown.Button>
+        <Dropdown.Menu aria-label="Opciones" onAction={handleDropdown}>
+          <Dropdown.Item key="save">Guardar</Dropdown.Item>
+          <Dropdown.Item key="copy">Copiar link</Dropdown.Item>
+          {id && (
+            <Dropdown.Item key="delete" color="error">
+              Eliminar
+            </Dropdown.Item>
+          )}
+        </Dropdown.Menu>
+      </Dropdown>
+      <Spacer y={2} />
       <Titulo />
-      <Spacer />
+      <Spacer y={2} />
       <Autores />
-      <Spacer />
       <Letras />
     </Container>
   )
@@ -90,7 +129,7 @@ function Titulo() {
   const update = useCallback((e) => (state.title = e.target.value), [])
   return (
     <Input
-      placeholder="titulo"
+      labelPlaceholder="Titulo"
       aria-label="titulo"
       value={title}
       onChange={update}
@@ -111,7 +150,7 @@ function Autores() {
         <>
           <Input
             // key={`autor-${key}`}
-            labelPlaceholder={!key && "autor principal"}
+            labelPlaceholder={!key && "Autor principal"}
             // placeholder={!key ? "autor principal" : key == 1 ? "&" : "ft."}
             labelLeft={key ? (key == 1 ? "&" : "ft.") : null}
             aria-label="autor"
@@ -120,17 +159,17 @@ function Autores() {
           />
           <Button.Group>
             {!!key && (
-              <Button auto onClick={() => --state.authors.length}>
+              <Button auto flat onClick={() => --state.authors.length}>
                 -
               </Button>
             )}
             {authors.length == ++key && (
-              <Button auto onClick={() => ++state.authors.length}>
+              <Button auto flat onClick={() => ++state.authors.length}>
                 +
               </Button>
             )}
           </Button.Group>
-          <Spacer y={0.25} />
+          <Spacer y={0.5} />
         </>
       ))}
     </>
@@ -168,20 +207,13 @@ function Letras() {
               />
             </Col>
           </Row>
-          {/* <Row> */}
-            {/* <Col> */}
-              <Tiptap
-                content={block.json}
-                // callback={(json) => (state.lyrics[i].json = json)}
-                onBlur={({ editor }) => {
-                  state.lyrics[i].json = editor.getJSON()
-                }}
-              />
-            {/* </Col> */}
-          {/* </Row> */}
+          <Tiptap
+            content={block.json as JSONContent}
+            onBlur={({ editor }) => (state.lyrics[i].json = editor.getJSON())}
+          />
         </Container>
       ))}
-      <Button onPress={() => ++state.lyrics.length}>Nuevo Bloque</Button>
+      <Button onPress={() => state.lyrics.push(section)}>Nuevo Bloque</Button>
     </>
   )
 }

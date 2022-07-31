@@ -80,7 +80,8 @@ model Profile {
 }
 
 model Song {
-    id     String @id @default(uuid())
+    id     String @id @default(cuid())
+    slug   String @unique
     // path    Json   @unique // [autor, titulo]
     title  String
     chords Json
@@ -104,6 +105,8 @@ model Draft {
     createdAt DateTime @default(now())
     submitted Boolean  @default(false)
     published Boolean  @default(false)
+
+    // users User[]
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
